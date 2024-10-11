@@ -3,8 +3,11 @@ namespace Unleash.Metrics
     internal class ClientMetrics
     {
         public string AppName { get; set; }
+
         public string InstanceId { get; set; }
+
         public MetricsBucket Bucket { get; set; }
+
         public string PlatformName
         {
             get
@@ -27,6 +30,7 @@ namespace Unleash.Metrics
                 return null;
             }
         }
+
         public string SpecVersion
         {
             get

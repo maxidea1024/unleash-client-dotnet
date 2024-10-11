@@ -6,10 +6,12 @@ namespace Unleash.Internal
         /// Feature is the name of the feature toggle we depend upon
         /// </summary>
         public string Feature { get; }
+
         /// <summary>
         /// Variants contains a string of variants that the dependency should resolve to
         /// </summary>
         public string[] Variants { get; }
+
         /// <summary>
         /// Enabled is the property that determines whether the dependency should be on or off. 
         /// If the property is absent from the payload it's assumed to be default on

@@ -36,7 +36,6 @@ namespace Unleash.ClientFactory
             return new DefaultUnleash(settings, strategies);
         }
 
-
         /// <summary>
         /// Initializes a new instance of Unleash client. 
         /// </summary>

@@ -15,8 +15,11 @@ namespace Unleash.Internal
         }
 
         public string Name { get; }
+
         public Payload Payload { get; }
+
         public bool IsEnabled { get; }
+
         public bool FeatureEnabled { get; internal set; }
     }
 }
