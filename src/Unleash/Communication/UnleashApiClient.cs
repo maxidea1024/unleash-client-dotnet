@@ -78,7 +78,9 @@ namespace Unleash.Communication
 
             string resourceUri = "client/features";
             if (!string.IsNullOrWhiteSpace(this.projectId))
+            {
                 resourceUri += "?project=" + this.projectId;
+            }
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, resourceUri))
             {
@@ -196,7 +198,9 @@ namespace Unleash.Communication
                 using (var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
                     if (response.IsSuccessStatusCode)
+                    {
                         return true;
+                    }
 
                     var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     Logger.Trace(() => $"UNLEASH: Error {response.StatusCode} from request '{requestUri}' in '{nameof(UnleashApiClient)}': " + error);
