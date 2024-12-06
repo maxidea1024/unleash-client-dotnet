@@ -120,7 +120,7 @@ namespace Unleash.Internal
             }
             catch (Exception exception)
             {
-                Logger.Trace(() => "UNLEASH: Failed to extract local ip address", exception);
+                Logger.Trace(() => "GANPA: Failed to extract local ip address", exception);
                 return "undefined";
             }
         }

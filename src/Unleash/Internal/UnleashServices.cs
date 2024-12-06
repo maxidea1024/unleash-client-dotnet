@@ -65,7 +65,7 @@ namespace Unleash
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Failed to load initial state from file: {ex.Message}");
+                    Logger.Error(() => $"GANPA: Failed to load initial state from file: {ex.Message}");
                     eventConfig.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }

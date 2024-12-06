@@ -8,12 +8,13 @@ namespace Unleash.Internal
     internal class CachedFilesLoader
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(FetchFeatureTogglesTask));
-        private readonly IFileSystem fileSystem;
-        private readonly IToggleBootstrapProvider toggleBootstrapProvider;
-        private readonly EventCallbackConfig eventConfig;
-        private readonly string toggleFile;
-        private readonly string etagFile;
-        private readonly bool bootstrapOverride;
+
+        private readonly IFileSystem _fileSystem;
+        private readonly IToggleBootstrapProvider _toggleBootstrapProvider;
+        private readonly EventCallbackConfig _eventConfig;
+        private readonly string _toggleFile;
+        private readonly string _etagFile;
+        private readonly bool _bootstrapOverride;
 
         public CachedFilesLoader(
             IFileSystem fileSystem,
@@ -23,69 +24,69 @@ namespace Unleash.Internal
             string etagFile,
             bool bootstrapOverride = true)
         {
-            this.fileSystem = fileSystem;
-            this.toggleBootstrapProvider = toggleBootstrapProvider;
-            this.eventConfig = eventConfig;
-            this.toggleFile = toggleFile;
-            this.etagFile = etagFile;
-            this.bootstrapOverride = bootstrapOverride;
+            _fileSystem = fileSystem;
+            _toggleBootstrapProvider = toggleBootstrapProvider;
+            _eventConfig = eventConfig;
+            _toggleFile = toggleFile;
+            _etagFile = etagFile;
+            _bootstrapOverride = bootstrapOverride;
         }
 
         public CachedFilesResult EnsureExistsAndLoad()
         {
             var result = new CachedFilesResult();
 
-            if (!fileSystem.FileExists(etagFile))
+            if (!_fileSystem.FileExists(_etagFile))
             {
                 // Ensure files exists.
                 try
                 {
-                    fileSystem.WriteAllText(etagFile, string.Empty);
+                    _fileSystem.WriteAllText(_etagFile, string.Empty);
                     result.InitialETag = string.Empty;
                 }
                 catch (IOException ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Unhandled exception when writing to ETag file '{etagFile}'.", ex);
-                    eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
+                    Logger.Error(() => $"GANPA: Unhandled exception when writing to ETag file '{_etagFile}'.", ex);
+                    _eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }
             else
             {
                 try
                 {
-                    result.InitialETag = fileSystem.ReadAllText(etagFile);
+                    result.InitialETag = _fileSystem.ReadAllText(_etagFile);
                 }
                 catch (IOException ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Unhandled exception when reading from ETag file '{etagFile}'.", ex);
-                    eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
+                    Logger.Error(() => $"GANPA: Unhandled exception when reading from ETag file '{_etagFile}'.", ex);
+                    _eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }
 
             // Toggles
-            if (!fileSystem.FileExists(toggleFile))
+            if (!_fileSystem.FileExists(_toggleFile))
             {
                 try
                 {
-                    fileSystem.WriteAllText(toggleFile, string.Empty);
+                    _fileSystem.WriteAllText(_toggleFile, string.Empty);
                     result.InitialState = string.Empty;
                 }
                 catch (IOException ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Unhandled exception when writing to toggle file '{toggleFile}'.", ex);
-                    eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
+                    Logger.Error(() => $"GANPA: Unhandled exception when writing to toggle file '{_toggleFile}'.", ex);
+                    _eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }
             else
             {
                 try
                 {
-                    result.InitialState = fileSystem.ReadAllText(toggleFile);
+                    result.InitialState = _fileSystem.ReadAllText(_toggleFile);
                 }
                 catch (IOException ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Unhandled exception when reading from toggle file '{toggleFile}'.", ex);
-                    eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
+                    Logger.Error(() => $"GANPA: Unhandled exception when reading from toggle file '{_toggleFile}'.", ex);
+                    _eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }
 
@@ -94,13 +95,13 @@ namespace Unleash.Internal
                 result.InitialETag = string.Empty;
             }
 
-            if ((string.IsNullOrEmpty(result.InitialState) || bootstrapOverride) && toggleBootstrapProvider != null)
+            if ((string.IsNullOrEmpty(result.InitialState) || _bootstrapOverride) && _toggleBootstrapProvider != null)
             {
-                var bootstrapState = toggleBootstrapProvider.Read();
+                var bootstrapState = _toggleBootstrapProvider.Read();
                 if (!string.IsNullOrEmpty(bootstrapState))
-				{
-					result.InitialState = bootstrapState;
-				}
+                {
+                    result.InitialState = bootstrapState;
+                }
             }
 
             return result;

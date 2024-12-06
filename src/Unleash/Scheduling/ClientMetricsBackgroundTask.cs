@@ -14,26 +14,28 @@ namespace Unleash.Scheduling
         public bool ExecuteDuringStartup { get; set; }
 
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(ClientMetricsBackgroundTask));
-        private readonly YggdrasilEngine engine;
-        private readonly IUnleashApiClient apiClient;
-        private readonly UnleashSettings settings;
+        private readonly YggdrasilEngine _engine;
+        private readonly IUnleashApiClient _apiClient;
+        private readonly UnleashSettings _settings;
 
         public ClientMetricsBackgroundTask(
             YggdrasilEngine engine,
             IUnleashApiClient apiClient,
             UnleashSettings settings)
         {
-            this.engine = engine;
-            this.apiClient = apiClient;
-            this.settings = settings;
+            _engine = engine;
+            _apiClient = apiClient;
+            _settings = settings;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            if (settings.SendMetricsInterval == null)
+            if (_settings.SendMetricsInterval == null)
+            {
                 return;
+            }
 
-            var result = await apiClient.SendMetrics(engine.GetMetrics(), cancellationToken).ConfigureAwait(false);
+            var result = await _apiClient.SendMetrics(_engine.GetMetrics(), cancellationToken).ConfigureAwait(false);
 
             // Ignore return value    
             if (!result)
