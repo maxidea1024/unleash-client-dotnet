@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
+
 namespace Unleash
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// A context which the feature request should be validated against. Usually scoped to a web request through an implementation of IUnleashContextProvider.
     /// </summary>

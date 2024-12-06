@@ -6,7 +6,7 @@ namespace Unleash
     {
         public UnleashContext Context { get; }
 
-        public DefaultUnleashContextProvider(UnleashContext? context = null)
+        public DefaultUnleashContextProvider(UnleashContext context = null)
         {
             Context = context ?? new UnleashContext
             {

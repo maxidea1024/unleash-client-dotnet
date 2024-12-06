@@ -52,7 +52,7 @@ namespace Unleash.Scheduling
             var result = await apiClient.RegisterClient(clientRegistration, cancellationToken).ConfigureAwait(false);
             if (!result)
             {
-                // Already logged..    
+                // Already logged..
             }
         }
     }

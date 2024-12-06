@@ -1,8 +1,8 @@
+using System;
+using System.Runtime.Serialization;
+
 namespace Unleash
 {
-    using System;
-    using System.Runtime.Serialization;
-
     /// <inheritdoc />
     [Serializable]
     public class UnleashException : Exception

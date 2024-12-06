@@ -1,11 +1,9 @@
 using System;
 using Yggdrasil;
-
+using System.Collections.Generic;
 
 namespace Unleash.Strategies
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// Defines a strategy for enabling a feature.
     /// </summary>
@@ -24,14 +22,14 @@ namespace Unleash.Strategies
 
     internal class CustomStrategyAdapter : Yggdrasil.IStrategy
     {
-        private IStrategy strategy { get; }
+        private readonly IStrategy _strategy;
 
         public CustomStrategyAdapter(IStrategy strategy)
         {
-            this.strategy = strategy;
+            _strategy = strategy;
         }
 
-        public string Name => strategy.Name;
+        public string Name => _strategy.Name;
 
         public bool IsEnabled(Dictionary<string, string> parameters, Context context)
         {
@@ -47,7 +45,7 @@ namespace Unleash.Strategies
                                                     .Build();
             unleashContext.Properties = context.Properties;
 
-            return strategy.IsEnabled(parameters, unleashContext);
+            return _strategy.IsEnabled(parameters, unleashContext);
         }
     }
 }

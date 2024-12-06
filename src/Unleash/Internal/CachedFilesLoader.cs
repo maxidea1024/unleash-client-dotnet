@@ -98,7 +98,9 @@ namespace Unleash.Internal
             {
                 var bootstrapState = toggleBootstrapProvider.Read();
                 if (!string.IsNullOrEmpty(bootstrapState))
-                    result.InitialState = bootstrapState;
+				{
+					result.InitialState = bootstrapState;
+				}
             }
 
             return result;
