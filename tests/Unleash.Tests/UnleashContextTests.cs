@@ -41,7 +41,8 @@ namespace Unleash.Tests
             // Act
             var enhancedContext = context.ApplyStaticFields(new UnleashSettings
             {
-                Environment = "stage",
+                // DEPRECATED:
+                // Environment = "stage",
                 AppName = "someapp"
             });
 
@@ -49,7 +50,8 @@ namespace Unleash.Tests
             enhancedContext.UserId.Should().Be("test@gmail.com");
             enhancedContext.SessionId.Should().Be("123");
             enhancedContext.RemoteAddress.Should().Be("127.0.0.1");
-            enhancedContext.Environment.Should().Be("stage");
+            // DEPRECATED:
+            // enhancedContext.Environment.Should().Be("stage");
             enhancedContext.AppName.Should().Be("someapp");
             enhancedContext.Properties["test"].Should().Be("me");
         }

@@ -53,12 +53,12 @@ namespace Unleash.Scheduling
             FetchTogglesResult result;
             try
             {
-                result = await _apiClient.FetchToggles(Etag, cancellationToken, !_ready && this.throwOnInitialLoadFail).ConfigureAwait(false);
+                result = await _apiClient.FetchToggles(Etag, cancellationToken, !_ready && _throwOnInitialLoadFail).ConfigureAwait(false);
             }
             catch (HttpRequestException ex)
             {
                 Logger.Warn(() => $"GANPA: Unhandled exception when fetching toggles.", ex);
-                eventConfig?.RaiseError(new ErrorEvent() { ErrorType = ErrorType.Client, Error = ex });
+                _eventConfig?.RaiseError(new ErrorEvent() { ErrorType = ErrorType.Client, Error = ex });
                 throw new UnleashException("Exception while fetching from API", ex);
             }
 
@@ -83,7 +83,7 @@ namespace Unleash.Scheduling
             {
                 try
                 {
-                    engine.TakeState(result.State);
+                    _engine.TakeState(result.State);
                 }
                 catch (Exception ex)
                 {
@@ -98,11 +98,11 @@ namespace Unleash.Scheduling
 
             try
             {
-                fileSystem.WriteAllText(_toggleFile, result.State);
+                _fileSystem.WriteAllText(_toggleFile, result.State);
             }
             catch (IOException ex)
             {
-                Logger.Warn(() => $"GANPA: Exception when writing to toggle file '{toggleFile}'.", ex);
+                Logger.Warn(() => $"GANPA: Exception when writing to toggle file '{_toggleFile}'.", ex);
                 _eventConfig?.RaiseError(new ErrorEvent() { ErrorType = ErrorType.TogglesBackup, Error = ex });
             }
 
@@ -110,11 +110,11 @@ namespace Unleash.Scheduling
 
             try
             {
-                fileSystem.WriteAllText(_etagFile, Etag);
+                _fileSystem.WriteAllText(_etagFile, Etag);
             }
             catch (IOException ex)
             {
-                Logger.Warn(() => $"GANPA: Exception when writing to ETag file '{etagFile}'.", ex);
+                Logger.Warn(() => $"GANPA: Exception when writing to ETag file '{_etagFile}'.", ex);
                 _eventConfig?.RaiseError(new ErrorEvent() { ErrorType = ErrorType.TogglesBackup, Error = ex });
             }
         }
