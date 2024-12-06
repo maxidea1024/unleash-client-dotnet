@@ -15,8 +15,8 @@ namespace Unleash
     internal class UnleashServices : IDisposable
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(UnleashServices));
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        private readonly IUnleashScheduledTaskManager scheduledTaskManager;
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly IUnleashScheduledTaskManager _scheduledTaskManager;
 
         public const string supportedSpecVersion = "5.1.7";
 
@@ -24,7 +24,7 @@ namespace Unleash
         internal IUnleashContextProvider ContextProvider { get; }
         internal bool IsMetricsDisabled { get; }
         internal FetchFeatureTogglesTask FetchFeatureTogglesTask { get; }
-        internal YggdrasilEngine engine { get; }
+        internal YggdrasilEngine Engine { get; }
         private static readonly IList<string> DefaultStrategyNames = new List<string> {
             "applicationHostname",
             "default",
@@ -45,13 +45,13 @@ namespace Unleash
 
             List<Yggdrasil.IStrategy> yggdrasilStrategies = strategies?.Select(s => new CustomStrategyAdapter(s)).Cast<Yggdrasil.IStrategy>().ToList();
 
-            engine = new YggdrasilEngine(yggdrasilStrategies);
+            Engine = new YggdrasilEngine(yggdrasilStrategies);
 
             var backupFile = settings.GetFeatureToggleFilePath();
             var etagBackupFile = settings.GetFeatureToggleETagFilePath();
 
             // Cancellation
-            CancellationToken = cancellationTokenSource.Token;
+            CancellationToken = _cancellationTokenSource.Token;
             ContextProvider = settings.UnleashContextProvider;
 
             var loader = new CachedFilesLoader(settings.FileSystem, settings.ToggleBootstrapProvider, eventConfig, backupFile, etagBackupFile, settings.BootstrapOverride);
@@ -61,7 +61,7 @@ namespace Unleash
             {
                 try
                 {
-                    engine.TakeState(cachedFilesResult.InitialState);
+                    Engine.TakeState(cachedFilesResult.InitialState);
                 }
                 catch (Exception ex)
                 {
@@ -95,12 +95,12 @@ namespace Unleash
                 apiClient = settings.UnleashApiClient;
             }
 
-            scheduledTaskManager = settings.ScheduledTaskManager;
+            _scheduledTaskManager = settings.ScheduledTaskManager;
 
             IsMetricsDisabled = settings.SendMetricsInterval == null;
 
             var fetchFeatureTogglesTask = new FetchFeatureTogglesTask(
-                engine,
+                Engine,
                 apiClient,
                 settings.FileSystem,
                 eventConfig,
@@ -134,7 +134,7 @@ namespace Unleash
                 scheduledTasks.Add(clientRegistrationBackgroundTask);
 
                 var clientMetricsBackgroundTask = new ClientMetricsBackgroundTask(
-                    engine,
+                    Engine,
                     apiClient,
                     settings
                     )
@@ -145,18 +145,18 @@ namespace Unleash
                 scheduledTasks.Add(clientMetricsBackgroundTask);
             }
 
-            scheduledTaskManager.Configure(scheduledTasks, CancellationToken);
+            _scheduledTaskManager.Configure(scheduledTasks, CancellationToken);
         }
 
         public void Dispose()
         {
-            if (!cancellationTokenSource.IsCancellationRequested)
+            if (!_cancellationTokenSource.IsCancellationRequested)
             {
-                cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Cancel();
             }
 
-            engine?.Dispose();
-            scheduledTaskManager?.Dispose();
+            Engine?.Dispose();
+            _scheduledTaskManager?.Dispose();
         }
     }
 }

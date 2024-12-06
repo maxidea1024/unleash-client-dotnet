@@ -16,14 +16,10 @@ namespace Unleash
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(DefaultUnleash));
 
         private static int InitializedInstanceCount = 0;
-
         private const int ErrorOnInstanceCount = 10;
-
-        private readonly UnleashSettings settings;
-
-        internal readonly UnleashServices services;
-
-        private readonly WarnOnce warnOnce;
+        private readonly UnleashSettings _settings;
+        internal readonly UnleashServices _services;
+        private readonly WarnOnce _warnOnce;
 
         ///// <summary>
         ///// Initializes a new instance of Unleash client.
@@ -34,18 +30,18 @@ namespace Unleash
         {
             var currentInstanceNo = Interlocked.Increment(ref InitializedInstanceCount);
 
-            this.settings = settings;
+            _settings = settings;
 
-            warnOnce = new WarnOnce(Logger);
+            _warnOnce = new WarnOnce(Logger);
 
             var settingsValidator = new UnleashSettingsValidator();
-            settingsValidator.Validate(settings);
+            settingsValidator.Validate(_settings);
 
-            services = new UnleashServices(settings, EventConfig, strategies?.ToList());
+            _services = new UnleashServices(_settings, EventConfig, strategies?.ToList());
 
-            Logger.Info(() => $"GANPA: Unleash instance number {currentInstanceNo} is initialized and configured with: {settings}");
+            Logger.Info(() => $"GANPA: Unleash instance number {currentInstanceNo} is initialized and configured with: {_settings}");
 
-            if (!settings.DisableSingletonWarning && currentInstanceNo >= ErrorOnInstanceCount)
+            if (!_settings.DisableSingletonWarning && currentInstanceNo >= ErrorOnInstanceCount)
             {
                 Logger.Error(() => $"GANPA: Unleash instance count for this process is now {currentInstanceNo}.");
                 Logger.Error(() => "Ideally you should only need 1 instance of Unleash per app/process, we strongly recommend setting up Unleash as a singleton.");
@@ -63,7 +59,7 @@ namespace Unleash
         /// <inheritdoc />
         public bool IsEnabled(string toggleName, bool defaultSetting)
         {
-            return IsEnabled(toggleName, services.ContextProvider.Context, defaultSetting);
+            return IsEnabled(toggleName, _services.ContextProvider.Context, defaultSetting);
         }
 
         public bool IsEnabled(string toggleName, UnleashContext context)
@@ -73,12 +69,12 @@ namespace Unleash
 
         public bool IsEnabled(string toggleName, UnleashContext context, bool defaultSetting)
         {
-            var enhancedContext = context.ApplyStaticFields(settings);
+            var enhancedContext = context.ApplyStaticFields(_settings);
 
-            var enabled = services.engine.IsEnabled(toggleName, enhancedContext) ?? defaultSetting;
+            var enabled = _services.Engine.IsEnabled(toggleName, enhancedContext) ?? defaultSetting;
 
-            services.engine.CountFeature(toggleName, enabled);
-            if (services.engine.ShouldEmitImpressionEvent(toggleName))
+            _services.Engine.CountFeature(toggleName, enabled);
+            if (_services.Engine.ShouldEmitImpressionEvent(toggleName))
             {
                 EmitImpressionEvent("isEnabled", enhancedContext, enabled, toggleName);
             }
@@ -88,17 +84,17 @@ namespace Unleash
 
         public ICollection<ToggleDefinition> ListKnownToggles()
         {
-            return services.engine.ListKnownToggles().Select(ToggleDefinition.FromYggdrasilDef).ToList();
+            return _services.Engine.ListKnownToggles().Select(ToggleDefinition.FromYggdrasilDef).ToList();
         }
 
         public Variant GetVariant(string toggleName)
         {
-            return GetVariant(toggleName, services.ContextProvider.Context, Variant.DISABLED_VARIANT);
+            return GetVariant(toggleName, _services.ContextProvider.Context, Variant.DISABLED_VARIANT);
         }
 
         public Variant GetVariant(string toggleName, Variant defaultVariant)
         {
-            return GetVariant(toggleName, services.ContextProvider.Context, defaultVariant);
+            return GetVariant(toggleName, _services.ContextProvider.Context, defaultVariant);
         }
 
         public Variant GetVariant(string toggleName, UnleashContext context)
@@ -108,20 +104,20 @@ namespace Unleash
 
         public Variant GetVariant(string toggleName, UnleashContext context, Variant defaultValue)
         {
-            var enhancedContext = context.ApplyStaticFields(settings);
+            var enhancedContext = context.ApplyStaticFields(_settings);
 
-            var variant = services.engine.GetVariant(toggleName, enhancedContext) ?? defaultValue;
-            var enabled = services.engine.IsEnabled(toggleName, enhancedContext);
-            services.engine.CountFeature(toggleName, enabled ?? false);
+            var variant = _services.Engine.GetVariant(toggleName, enhancedContext) ?? defaultValue;
+            var enabled = _services.Engine.IsEnabled(toggleName, enhancedContext);
+            _services.Engine.CountFeature(toggleName, enabled ?? false);
 
             if (enabled != null)
             {
-                services.engine.CountVariant(toggleName, variant.Name);
+                _services.Engine.CountVariant(toggleName, variant.Name);
             }
 
             variant.FeatureEnabled = enabled ?? false;
 
-            if (services.engine.ShouldEmitImpressionEvent(toggleName))
+            if (_services.Engine.ShouldEmitImpressionEvent(toggleName))
             {
                 EmitImpressionEvent("getVariant", enhancedContext, variant.Enabled, toggleName, variant.Name);
             }
@@ -175,7 +171,7 @@ namespace Unleash
 
         public void Dispose()
         {
-            services?.Dispose();
+            _services?.Dispose();
         }
     }
 }
