@@ -56,7 +56,7 @@ namespace Unleash.Scheduling
                         // Stop the timer.
                         if (timers.ContainsKey(name))
                         {
-                            timers[name].SafeTimerChange(Timeout.Infinite, Timeout.Infinite, ref disposeEnded);
+                            timers[name].SafeTimerChange(Timeout.Infinite, Timeout.Infinite, ref _disposeEnded);
                         }
                     }
                 }
@@ -80,14 +80,16 @@ namespace Unleash.Scheduling
             timers.Add(name, timer);
 
             // Now it's ok to start the timer.
-            timer.SafeTimerChange(dueTime, period, ref disposeEnded);
+            timer.SafeTimerChange(dueTime, period, ref _disposeEnded);
         }
 
-        private bool disposeEnded;
+        private bool _disposeEnded;
         public void Dispose()
         {
-            if (disposeEnded)
-                return;
+            if (_disposeEnded)
+			{
+				return;
+			}
 
             var timeout = TimeSpan.FromSeconds(1);
 
@@ -106,7 +108,7 @@ namespace Unleash.Scheduling
                 }
             }
 
-            disposeEnded = true;
+            _disposeEnded = true;
             timers.Clear();
         }
     }

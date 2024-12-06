@@ -14,6 +14,7 @@ namespace Unleash.Scheduling
         public bool ExecuteDuringStartup { get; set; }
 
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(ClientMetricsBackgroundTask));
+
         private readonly YggdrasilEngine _engine;
         private readonly IUnleashApiClient _apiClient;
         private readonly UnleashSettings _settings;
@@ -37,7 +38,7 @@ namespace Unleash.Scheduling
 
             var result = await _apiClient.SendMetrics(_engine.GetMetrics(), cancellationToken).ConfigureAwait(false);
 
-            // Ignore return value    
+            // Ignore return value
             if (!result)
             {
                 // Logged elsewhere.
