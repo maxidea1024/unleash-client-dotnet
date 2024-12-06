@@ -13,7 +13,6 @@ namespace Unleash.Tests.Mock
         private Dictionary<string, HttpResponseMessage> configuredResponses = new Dictionary<string, HttpResponseMessage>();
         public List<HttpRequestMessage> SentMessages = new List<HttpRequestMessage>();
 
-
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             SentMessages.Add(request);

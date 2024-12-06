@@ -4,18 +4,18 @@ namespace Unleash.Utilities
 {
     public class ToggleBootstrapFileProvider : IToggleBootstrapProvider
     {
-        private readonly string filePath;
-        private readonly UnleashSettings settings;
+        private readonly string _filePath;
+        private readonly UnleashSettings _settings;
 
         internal ToggleBootstrapFileProvider(string filePath, UnleashSettings settings)
         {
-            this.filePath = filePath;
-            this.settings = settings;
+            _filePath = filePath;
+            _settings = settings;
         }
 
         public string Read()
         {
-            return settings.FileSystem.ReadAllText(filePath);
+            return _settings.FileSystem.ReadAllText(_filePath);
         }
     }
 }

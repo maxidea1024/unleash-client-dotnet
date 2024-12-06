@@ -43,11 +43,11 @@ namespace Unleash
 
             services = new UnleashServices(settings, EventConfig, strategies?.ToList());
 
-            Logger.Info(() => $"UNLEASH: Unleash instance number {currentInstanceNo} is initialized and configured with: {settings}");
+            Logger.Info(() => $"GANPA: Unleash instance number {currentInstanceNo} is initialized and configured with: {settings}");
 
             if (!settings.DisableSingletonWarning && currentInstanceNo >= ErrorOnInstanceCount)
             {
-                Logger.Error(() => $"UNLEASH: Unleash instance count for this process is now {currentInstanceNo}.");
+                Logger.Error(() => $"GANPA: Unleash instance count for this process is now {currentInstanceNo}.");
                 Logger.Error(() => "Ideally you should only need 1 instance of Unleash per app/process, we strongly recommend setting up Unleash as a singleton.");
             }
         }
@@ -133,7 +133,7 @@ namespace Unleash
         {
             if (callback == null)
             {
-                Logger.Error(() => $"UNLEASH: Unleash->ConfigureEvents parameter callback is null");
+                Logger.Error(() => $"GANPA: Unleash->ConfigureEvents parameter callback is null");
                 return;
             }
 
@@ -143,7 +143,7 @@ namespace Unleash
             }
             catch (Exception ex)
             {
-                Logger.Error(() => $"UNLEASH: Unleash->ConfigureEvents executing callback threw exception: {ex.Message}");
+                Logger.Error(() => $"GANPA: Unleash->ConfigureEvents executing callback threw exception: {ex.Message}");
             }
         }
 
@@ -151,7 +151,7 @@ namespace Unleash
         {
             if (EventConfig?.ImpressionEvent == null)
             {
-                Logger.Error(() => $"UNLEASH: Unleash->ImpressionData callback is null, unable to emit event");
+                Logger.Error(() => $"GANPA: Unleash->ImpressionData callback is null, unable to emit event");
                 return;
             }
 
@@ -169,7 +169,7 @@ namespace Unleash
             }
             catch (Exception ex)
             {
-                Logger.Error(() => $"UNLEASH: Emitting impression event callback threw exception: {ex.Message}");
+                Logger.Error(() => $"GANPA: Emitting impression event callback threw exception: {ex.Message}");
             }
         }
 
