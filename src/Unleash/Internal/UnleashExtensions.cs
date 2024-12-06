@@ -102,7 +102,9 @@ namespace Unleash.Internal
             {
                 var hostname = Environment.GetEnvironmentVariable("hostname");
                 if (hostname != null)
+                {
                     return hostname;
+                }
 
                 var host = Dns.GetHostEntry(Dns.GetHostName());
 

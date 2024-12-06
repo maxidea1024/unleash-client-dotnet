@@ -12,6 +12,7 @@ namespace Unleash
     /// <inheritdoc />
     public class DefaultUnleash : IUnleash
     {
+        // TODO: ILog 의존성을 제거하자.
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(DefaultUnleash));
 
         private static int InitializedInstanceCount = 0;

@@ -13,6 +13,10 @@ namespace Unleash.Scheduling
 {
     internal class FetchFeatureTogglesTask : IUnleashScheduledTask
     {
+        public string Name => "fetch-feature-toggles-task";
+        public TimeSpan Interval { get; set; }
+        public bool ExecuteDuringStartup { get; set; }
+
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(FetchFeatureTogglesTask));
         private readonly string toggleFile;
         private readonly string etagFile;
@@ -110,9 +114,5 @@ namespace Unleash.Scheduling
                 eventConfig?.RaiseError(new ErrorEvent() { ErrorType = ErrorType.TogglesBackup, Error = ex });
             }
         }
-
-        public string Name => "fetch-feature-toggles-task";
-        public TimeSpan Interval { get; set; }
-        public bool ExecuteDuringStartup { get; set; }
     }
 }

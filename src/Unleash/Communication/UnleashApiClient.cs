@@ -288,13 +288,19 @@ namespace Unleash.Communication
         private static void SetCustomHeaders(HttpRequestMessage requestMessage, Dictionary<string, string> headers)
         {
             if (headers == null)
+            {
                 return;
+            }
 
             if (headers.Count == 0)
+            {
                 return;
+            }
 
             foreach (var header in headers)
+            {
                 requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
         }
     }
 }

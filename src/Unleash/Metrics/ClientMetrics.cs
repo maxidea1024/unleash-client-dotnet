@@ -3,8 +3,11 @@ namespace Unleash.Metrics
     internal class ClientMetrics
     {
         public string AppName { get; set; }
+
         public string InstanceId { get; set; }
+
         public Yggdrasil.MetricsBucket Bucket { get; set; }
+
         public string PlatformName
         {
             get
@@ -13,6 +16,7 @@ namespace Unleash.Metrics
 
             }
         }
+
         public string PlatformVersion
         {
             get
@@ -20,6 +24,7 @@ namespace Unleash.Metrics
                 return MetricsMetadata.GetPlatformVersion();
             }
         }
+
         public string YggdrasilVersion
         {
             get
@@ -27,6 +32,7 @@ namespace Unleash.Metrics
                 return "0.14.0";
             }
         }
+
         public string SpecVersion
         {
             get

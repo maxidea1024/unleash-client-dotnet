@@ -10,6 +10,12 @@ namespace Unleash.Scheduling
 {
     internal class ClientRegistrationBackgroundTask : IUnleashScheduledTask
     {
+        public string Name => "register-client-task";
+
+        public TimeSpan Interval { get; set; }
+
+        public bool ExecuteDuringStartup { get; set; }
+
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(ClientRegistrationBackgroundTask));
 
         private readonly IUnleashApiClient apiClient;
@@ -29,7 +35,9 @@ namespace Unleash.Scheduling
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             if (settings.SendMetricsInterval == null)
+            {
                 return;
+            }
 
             var clientRegistration = new ClientRegistration
             {
@@ -47,10 +55,5 @@ namespace Unleash.Scheduling
                 // Already logged..    
             }
         }
-
-        public string Name => "register-client-task";
-
-        public TimeSpan Interval { get; set; }
-        public bool ExecuteDuringStartup { get; set; }
     }
 }
