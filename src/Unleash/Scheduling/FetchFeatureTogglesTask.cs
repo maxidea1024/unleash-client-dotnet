@@ -70,14 +70,14 @@ namespace Unleash.Scheduling
             }
 
             if (string.IsNullOrEmpty(result.Etag))
-			{
-				return;
-			}
+            {
+                return;
+            }
 
             if (result.Etag == Etag)
-			{
-				return;
-			}
+            {
+                return;
+            }
 
             if (!string.IsNullOrEmpty(result.State))
             {
