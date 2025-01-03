@@ -7,7 +7,7 @@ internal static class MetricsMetadata
 #if NETSTANDARD1_1_OR_GREATER || NETCOREAPP1_0_OR_GREATER
         return GetPlatformName(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
-            return "PreDotNetCore";
+        return "PreDotNetCore";
 #endif
     }
 
@@ -22,7 +22,7 @@ internal static class MetricsMetadata
 #if NETSTANDARD1_1_OR_GREATER || NETCOREAPP1_0_OR_GREATER
         return GetPlatformVersion(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
-            return null;
+        return null;
 #endif
     }
 
