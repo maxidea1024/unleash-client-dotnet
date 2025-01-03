@@ -13,7 +13,6 @@ namespace Unleash.Tests
                 .UserId("test@gmail.com")
                 .SessionId("123")
                 .RemoteAddress("127.0.0.1")
-                .Environment("prod")
                 .AppName("myapp")
                 .AddProperty("test", "me")
                 .Build();
@@ -22,7 +21,6 @@ namespace Unleash.Tests
             context.UserId.Should().Be("test@gmail.com");
             context.SessionId.Should().Be("123");
             context.RemoteAddress.Should().Be("127.0.0.1");
-            context.Environment.Should().Be("prod");
             context.AppName.Should().Be("myapp");
             context.Properties["test"].Should().Be("me");
         }
@@ -41,7 +39,6 @@ namespace Unleash.Tests
             // Act
             var enhancedContext = context.ApplyStaticFields(new UnleashSettings
             {
-                Environment = "stage",
                 AppName = "someapp"
             });
 
@@ -49,7 +46,6 @@ namespace Unleash.Tests
             enhancedContext.UserId.Should().Be("test@gmail.com");
             enhancedContext.SessionId.Should().Be("123");
             enhancedContext.RemoteAddress.Should().Be("127.0.0.1");
-            enhancedContext.Environment.Should().Be("stage");
             enhancedContext.AppName.Should().Be("someapp");
             enhancedContext.Properties["test"].Should().Be("me");
         }
@@ -62,7 +58,6 @@ namespace Unleash.Tests
                 .UserId("test@gmail.com")
                 .SessionId("123")
                 .RemoteAddress("127.0.0.1")
-                .Environment("prod")
                 .AppName("myapp")
                 .AddProperty("test", "me")
                 .Build();
@@ -70,7 +65,6 @@ namespace Unleash.Tests
             // Act
             var enhancedContext = context.ApplyStaticFields(new UnleashSettings
             {
-                Environment = "stage",
                 AppName = "someapp"
             });
 
@@ -78,7 +72,6 @@ namespace Unleash.Tests
             enhancedContext.UserId.Should().Be("test@gmail.com");
             enhancedContext.SessionId.Should().Be("123");
             enhancedContext.RemoteAddress.Should().Be("127.0.0.1");
-            enhancedContext.Environment.Should().Be("prod");
             enhancedContext.AppName.Should().Be("myapp");
             enhancedContext.Properties["test"].Should().Be("me");
         }

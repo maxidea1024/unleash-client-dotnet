@@ -1,7 +1,6 @@
 using System;
 using Yggdrasil;
 
-
 namespace Unleash.Strategies
 {
     using System.Collections.Generic;
@@ -24,14 +23,14 @@ namespace Unleash.Strategies
 
     internal class CustomStrategyAdapter : Yggdrasil.IStrategy
     {
-        private IStrategy strategy { get; }
+        private IStrategy _strategy;
 
         public CustomStrategyAdapter(IStrategy strategy)
         {
-            this.strategy = strategy;
+            _strategy = strategy;
         }
 
-        public string Name => strategy.Name;
+        public string Name => _strategy.Name;
 
         public bool IsEnabled(Dictionary<string, string> parameters, Context context)
         {
@@ -40,14 +39,13 @@ namespace Unleash.Strategies
             var unleashContext = new UnleashContext.Builder()
                                                     .AppName(context.AppName)
                                                     .CurrentTime(currentTime)
-                                                    .Environment(context.Environment)
                                                     .UserId(context.UserId)
                                                     .SessionId(context.SessionId)
                                                     .RemoteAddress(context.RemoteAddress)
                                                     .Build();
             unleashContext.Properties = context.Properties;
 
-            return strategy.IsEnabled(parameters, unleashContext);
+            return _strategy.IsEnabled(parameters, unleashContext);
         }
     }
 }

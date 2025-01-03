@@ -14,6 +14,7 @@ public class BaseBackoffTest
         {
             this.responses = responses;
         }
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var response = responses[CallCount];

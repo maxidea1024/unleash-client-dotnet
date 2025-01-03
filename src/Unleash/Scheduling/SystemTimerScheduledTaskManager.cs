@@ -15,7 +15,7 @@ namespace Unleash.Scheduling
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(SystemTimerScheduledTaskManager));
 
-        private readonly Dictionary<string, Timer> timers = new Dictionary<string, Timer>();
+        private readonly Dictionary<string, Timer> _timers = new Dictionary<string, Timer>();
 
         public void Configure(IEnumerable<IUnleashScheduledTask> tasks, CancellationToken cancellationToken)
         {
@@ -54,9 +54,9 @@ namespace Unleash.Scheduling
                     if (cancellationToken.IsCancellationRequested)
                     {
                         // Stop the timer.
-                        if (timers.ContainsKey(name))
+                        if (_timers.ContainsKey(name))
                         {
-                            timers[name].SafeTimerChange(Timeout.Infinite, Timeout.Infinite, ref disposeEnded);
+                            _timers[name].SafeTimerChange(Timeout.Infinite, Timeout.Infinite, ref disposeEnded);
                         }
                     }
                 }
@@ -77,7 +77,7 @@ namespace Unleash.Scheduling
                 dueTime: Timeout.Infinite,
                 period: Timeout.Infinite);
 
-            timers.Add(name, timer);
+            _timers.Add(name, timer);
 
             // Now it's ok to start the timer.
             timer.SafeTimerChange(dueTime, period, ref disposeEnded);
@@ -87,13 +87,15 @@ namespace Unleash.Scheduling
         public void Dispose()
         {
             if (disposeEnded)
+            {
                 return;
+            }
 
             var timeout = TimeSpan.FromSeconds(1);
 
             using (var waitHandle = new ManualResetEvent(false))
             {
-                foreach (var task in timers)
+                foreach (var task in _timers)
                 {
                     // Returns false on second dispose
                     if (task.Value.Dispose(waitHandle))
@@ -107,7 +109,7 @@ namespace Unleash.Scheduling
             }
 
             disposeEnded = true;
-            timers.Clear();
+            _timers.Clear();
         }
     }
 }

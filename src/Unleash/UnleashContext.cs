@@ -13,10 +13,9 @@ namespace Unleash
             Properties = new Dictionary<string, string>();
         }
 
-        public UnleashContext(string appName, string environment, string userId, string sessionId, string remoteAddress, DateTimeOffset? currentTime, Dictionary<string, string> properties)
+        public UnleashContext(string appName, string userId, string sessionId, string remoteAddress, DateTimeOffset? currentTime, Dictionary<string, string> properties)
         {
             AppName = appName;
-            Environment = environment;
             UserId = userId;
             SessionId = sessionId;
             RemoteAddress = remoteAddress;
@@ -28,8 +27,6 @@ namespace Unleash
         {
             switch (contextName)
             {
-                case "environment":
-                    return Environment;
                 case "appName":
                     return AppName;
                 case "userId":
@@ -49,7 +46,6 @@ namespace Unleash
 
         public UnleashContext ApplyStaticFields(UnleashSettings settings)
         {
-            Environment = string.IsNullOrEmpty(Environment) ? settings.Environment : Environment;
             AppName = string.IsNullOrEmpty(AppName) ? settings.AppName : AppName;
             return this;
         }
@@ -61,80 +57,72 @@ namespace Unleash
 
         internal class Builder
         {
-            private string appName;
-            private string environment;
-            private string userId;
-            private string sessionId;
-            private string remoteAddress;
-            private DateTimeOffset? currentTime;
-            private readonly Dictionary<string, string> properties;
+            private string _appName;
+            private string _userId;
+            private string _sessionId;
+            private string _remoteAddress;
+            private DateTimeOffset? _currentTime;
+            private readonly Dictionary<string, string> _properties;
 
             public Builder()
             {
-                properties = new Dictionary<string, string>();
+                _properties = new Dictionary<string, string>();
             }
 
             public Builder(UnleashContext context)
             {
-                appName = context.AppName;
-                environment = context.Environment;
-                userId = context.UserId;
-                sessionId = context.SessionId;
-                remoteAddress = context.RemoteAddress;
-                currentTime = context.CurrentTime;
-                properties = new Dictionary<string, string>(context.Properties);
+                _appName = context.AppName;
+                _userId = context.UserId;
+                _sessionId = context.SessionId;
+                _remoteAddress = context.RemoteAddress;
+                _currentTime = context.CurrentTime;
+                _properties = new Dictionary<string, string>(context.Properties);
             }
 
             public Builder AppName(string appName)
             {
-                this.appName = appName;
-                return this;
-            }
-
-            public Builder Environment(string environment)
-            {
-                this.environment = environment;
+                _appName = appName;
                 return this;
             }
 
             public Builder UserId(string userId)
             {
-                this.userId = userId;
+                _userId = userId;
                 return this;
             }
 
             public Builder SessionId(string sessionId)
             {
-                this.sessionId = sessionId;
+                _sessionId = sessionId;
                 return this;
             }
 
             public Builder RemoteAddress(string remoteAddress)
             {
-                this.remoteAddress = remoteAddress;
+                _remoteAddress = remoteAddress;
                 return this;
             }
 
             public Builder CurrentTime(DateTimeOffset currentTime)
             {
-                this.currentTime = currentTime;
+                _currentTime = currentTime;
                 return this;
             }
 
             public Builder Now()
             {
-                this.currentTime = DateTimeOffset.UtcNow;
+                _currentTime = DateTimeOffset.UtcNow;
                 return this;
             }
 
             public Builder AddProperty(string name, string value)
             {
-                properties.Add(name, value);
+                _properties.Add(name, value);
                 return this;
             }
 
             public UnleashContext Build()
-                => new UnleashContext(appName, environment, userId, sessionId, remoteAddress, currentTime, properties);
+                => new UnleashContext(_appName, _userId, _sessionId, _remoteAddress, _currentTime, _properties);
         }
     }
 }
