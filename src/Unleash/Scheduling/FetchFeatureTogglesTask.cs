@@ -66,10 +66,14 @@ namespace Unleash.Scheduling
             }
 
             if (string.IsNullOrEmpty(result.Etag))
+            {
                 return;
+            }
 
             if (result.Etag == Etag)
+            {
                 return;
+            }
 
             if (!string.IsNullOrEmpty(result.State))
             {
