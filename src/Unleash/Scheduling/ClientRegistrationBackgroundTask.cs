@@ -16,6 +16,10 @@ namespace Unleash.Scheduling
         private readonly UnleashSettings _settings;
         private readonly List<string> _strategies;
 
+        public string Name => "register-client-task";
+        public TimeSpan Interval { get; set; }
+        public bool ExecuteDuringStartup { get; set; }
+
         public ClientRegistrationBackgroundTask(
             IUnleashApiClient apiClient,
             UnleashSettings settings,
@@ -29,7 +33,9 @@ namespace Unleash.Scheduling
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             if (_settings.SendMetricsInterval == null)
+            {
                 return;
+            }
 
             var clientRegistration = new ClientRegistration
             {
@@ -47,10 +53,5 @@ namespace Unleash.Scheduling
                 // Already logged..    
             }
         }
-
-        public string Name => "register-client-task";
-
-        public TimeSpan Interval { get; set; }
-        public bool ExecuteDuringStartup { get; set; }
     }
 }

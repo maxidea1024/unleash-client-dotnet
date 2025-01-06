@@ -102,7 +102,9 @@ namespace Unleash.Internal
             {
                 var hostname = Environment.GetEnvironmentVariable("hostname");
                 if (hostname != null)
+                {
                     return hostname;
+                }
 
                 var host = Dns.GetHostEntry(Dns.GetHostName());
 
@@ -116,9 +118,9 @@ namespace Unleash.Internal
 
                 return "undefined-ip-address";
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Logger.Trace(() => "UNLEASH: Failed to extract local ip address", exception);
+                Logger.Trace(() => "UNLEASH: Failed to extract local ip address", ex);
                 return "undefined";
             }
         }

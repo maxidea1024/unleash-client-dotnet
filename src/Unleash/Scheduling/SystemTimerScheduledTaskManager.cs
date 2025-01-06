@@ -83,10 +83,10 @@ namespace Unleash.Scheduling
             timer.SafeTimerChange(dueTime, period, ref disposeEnded);
         }
 
-        private bool disposeEnded;
+        private bool _disposeEnded;
         public void Dispose()
         {
-            if (disposeEnded)
+            if (_disposeEnded)
             {
                 return;
             }
@@ -108,7 +108,7 @@ namespace Unleash.Scheduling
                 }
             }
 
-            disposeEnded = true;
+            _disposeEnded = true;
             _timers.Clear();
         }
     }

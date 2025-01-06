@@ -10,9 +10,14 @@ namespace Unleash.Scheduling
     internal class ClientMetricsBackgroundTask : IUnleashScheduledTask
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(ClientMetricsBackgroundTask));
+
         private readonly YggdrasilEngine _engine;
         private readonly IUnleashApiClient _apiClient;
         private readonly UnleashSettings _settings;
+
+        public string Name => "report-metrics-task";
+        public TimeSpan Interval { get; set; }
+        public bool ExecuteDuringStartup { get; set; }
 
         public ClientMetricsBackgroundTask(
             YggdrasilEngine engine,
@@ -39,9 +44,5 @@ namespace Unleash.Scheduling
                 // Logged elsewhere.
             }
         }
-
-        public string Name => "report-metrics-task";
-        public TimeSpan Interval { get; set; }
-        public bool ExecuteDuringStartup { get; set; }
     }
 }

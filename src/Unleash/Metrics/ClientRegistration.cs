@@ -17,37 +17,12 @@ namespace Unleash.Metrics
 
         public long Interval { get; set; }
 
-        public string PlatformName
-        {
-            get
-            {
-                return MetricsMetadata.GetPlatformName();
+        public string PlatformName => MetricsMetadata.GetPlatformName();
 
-            }
-        }
+        public string PlatformVersion => MetricsMetadata.GetPlatformVersion();
 
-        public string PlatformVersion
-        {
-            get
-            {
-                return MetricsMetadata.GetPlatformVersion();
-            }
-        }
+        public string YggdrasilVersion => "0.14.0";
 
-        public string YggdrasilVersion
-        {
-            get
-            {
-                return "0.14.0";
-            }
-        }
-
-        public string SpecVersion
-        {
-            get
-            {
-                return UnleashServices.supportedSpecVersion;
-            }
-        }
+        public string SpecVersion => UnleashServices.supportedSpecVersion;
     }
 }
