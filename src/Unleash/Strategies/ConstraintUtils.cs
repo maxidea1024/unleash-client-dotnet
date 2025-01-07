@@ -44,18 +44,26 @@ namespace Unleash.Strategies
 
             var contextValue = context.GetByName(constraint.ContextName);
             if (constraint.Operator == null)
+            {
                 return false;
+            }
 
             if (operators.ContainsKey(constraint.Operator))
+            {
                 return operators[constraint.Operator].Evaluate(constraint, context);
+            }
             else
             {
                 var isIn = contextValue != null && constraint.Values.Contains(contextValue.Trim());
 
                 if (constraint.Operator == Operator.IN)
+                {
                     return constraint.Inverted ? !isIn : isIn;
+                }
                 if (constraint.Operator == Operator.NOT_IN)
+                {
                     return constraint.Inverted ? isIn : !isIn;
+                }
             }
 
             return false;

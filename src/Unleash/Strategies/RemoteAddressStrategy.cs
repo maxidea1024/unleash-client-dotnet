@@ -15,13 +15,15 @@ namespace Unleash.Strategies
 
         public string Name => "remoteAddress";
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context = null)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext? context = null)
         {
             var remoteAddress = context?.RemoteAddress;
             IPAddress remoteIPAddress;
 
             if (string.IsNullOrEmpty(remoteAddress) || !IPAddress.TryParse(remoteAddress, out remoteIPAddress))
+            {
                 return false;
+            }
 
             if (parameters.TryGetValue(PARAM, out var remoteAddresses))
             {
@@ -31,12 +33,16 @@ namespace Unleash.Strategies
                     .ToList();
 
                 if (addresses.Contains(remoteAddress))
+                {
                     return true;
+                }
 
                 var addressRanges = ToAddressRanges(addresses);
 
                 if (!addressRanges.Any())
+                {
                     return false;
+                }
 
                 return addressRanges
                     .Any(range => range.Contains(remoteIPAddress));

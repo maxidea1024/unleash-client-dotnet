@@ -13,14 +13,18 @@ namespace Unleash.Strategies
         public string Name => "userWithId";
 
         /// <inheritdoc />
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context = null)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext? context = null)
         {
             var userId = context?.UserId;
             if (userId == null || userId == string.Empty)
+            {
                 return false;
+            }
 
             if (!parameters.TryGetValue(UserIdsConst, out var userIds))
+            {
                 return false;
+            }
 
             const string commaDelimeter = ",";
             const string space = " ";

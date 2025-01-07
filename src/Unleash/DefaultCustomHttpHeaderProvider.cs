@@ -5,12 +5,7 @@ namespace Unleash
 {
     internal class DefaultCustomHttpHeaderProvider : IUnleashCustomHttpHeaderProvider
     {
-        public Dictionary<string, string> CustomHeaders
-        {
-            get
-            {
-                return new Dictionary<string, string>();
-            }
-        }
+        // TODO readonly collection
+        public Dictionary<string, string> CustomHeaders => new Dictionary<string, string>();
     }
 }

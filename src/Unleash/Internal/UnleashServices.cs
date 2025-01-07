@@ -13,8 +13,8 @@ namespace Unleash
 {
     internal class UnleashServices : IDisposable
     {
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        private readonly IUnleashScheduledTaskManager scheduledTaskManager;
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly IUnleashScheduledTaskManager _scheduledTaskManager;
 
         const string supportedSpecVersion = "4.5.1";
 
@@ -36,7 +36,7 @@ namespace Unleash
             var etagBackupFile = settings.GetFeatureToggleETagFilePath();
 
             // Cancellation
-            CancellationToken = cancellationTokenSource.Token;
+            CancellationToken = _cancellationTokenSource.Token;
             ContextProvider = settings.UnleashContextProvider;
 
             var loader = new CachedFilesLoader(settings.JsonSerializer, settings.FileSystem, settings.ToggleBootstrapProvider, eventConfig, backupFile, etagBackupFile, settings.BootstrapOverride);
@@ -74,7 +74,7 @@ namespace Unleash
                 apiClient = settings.UnleashApiClient;
             }
 
-            scheduledTaskManager = settings.ScheduledTaskManager;
+            _scheduledTaskManager = settings.ScheduledTaskManager;
 
             IsMetricsDisabled = settings.SendMetricsInterval == null;
 
@@ -122,17 +122,17 @@ namespace Unleash
                 scheduledTasks.Add(clientMetricsBackgroundTask);
             }
 
-            scheduledTaskManager.Configure(scheduledTasks, CancellationToken);
+            _scheduledTaskManager.Configure(scheduledTasks, CancellationToken);
         }
 
         public void Dispose()
         {
-            if (!cancellationTokenSource.IsCancellationRequested)
+            if (!_cancellationTokenSource.IsCancellationRequested)
             {
-                cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Cancel();
             }
 
-            scheduledTaskManager?.Dispose();
+            _scheduledTaskManager?.Dispose();
             ToggleCollection?.Dispose();
         }
     }

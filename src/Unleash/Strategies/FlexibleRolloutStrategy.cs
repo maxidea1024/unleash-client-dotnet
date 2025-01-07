@@ -10,17 +10,17 @@ namespace Unleash.Strategies
         protected static readonly string GroupId = "groupId";
 
         public string Name => "flexibleRollout";
-        private Func<string> randomGenerator;
+        private Func<string> _randomGenerator;
 
         public FlexibleRolloutStrategy()
         {
             var random = new Random();
-            randomGenerator = () => (random.Next() * 100).ToString();
+            _randomGenerator = () => (random.Next() * 100).ToString();
         }
 
         public FlexibleRolloutStrategy(Func<string> randomGenerator)
         {
-            this.randomGenerator = randomGenerator;
+            _randomGenerator = randomGenerator;
         }
 
         public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)

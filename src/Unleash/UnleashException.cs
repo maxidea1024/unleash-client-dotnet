@@ -23,9 +23,7 @@ namespace Unleash
         }
 
         /// <inheritdoc />
-        protected UnleashException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
+        protected UnleashException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

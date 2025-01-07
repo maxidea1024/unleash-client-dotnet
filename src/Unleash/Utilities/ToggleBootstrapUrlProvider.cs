@@ -15,48 +15,50 @@ namespace Unleash.Utilities
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(ToggleBootstrapUrlProvider));
 
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        private readonly HttpClient client;
-        private readonly UnleashSettings settings;
-        private readonly string path;
-        private readonly bool throwOnFail;
-        private readonly Dictionary<string, string> customHeaders;
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly HttpClient _client;
+        private readonly UnleashSettings _settings;
+        private readonly string _path;
+        private readonly bool _throwOnFail;
+        private readonly Dictionary<string, string>? _customHeaders;
 
-        public ToggleBootstrapUrlProvider(string path, HttpClient client, UnleashSettings settings, bool throwOnFail = false, Dictionary<string, string> customHeaders = null)
+        public ToggleBootstrapUrlProvider(string path, HttpClient client, UnleashSettings settings, bool throwOnFail = false, Dictionary<string, string>? customHeaders = null)
         {
-            this.path = path;
-            this.client = client;
-            this.settings = settings;
-            this.throwOnFail = throwOnFail;
-            this.customHeaders = customHeaders;
+            _path = path;
+            _client = client;
+            _settings = settings;
+            _throwOnFail = throwOnFail;
+            _customHeaders = customHeaders;
         }
 
-        public ToggleCollection Read()
+        public ToggleCollection? Read()
         {
             return Task.Run(() => FetchFile()).GetAwaiter().GetResult();
         }
 
-        private async Task<ToggleCollection> FetchFile()
+        private async Task<ToggleCollection?> FetchFile()
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, path))
+            using (var request = new HttpRequestMessage(HttpMethod.Get, _path))
             {
-                if (customHeaders != null)
+                if (_customHeaders != null)
                 {
-                    foreach (var keyValuePair in customHeaders)
+                    foreach (var keyValuePair in _customHeaders)
                     {
                         request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
                     }
                 }
 
-                using (var response = await client.SendAsync(request, cancellationTokenSource.Token).ConfigureAwait(false))
+                using (var response = await _client.SendAsync(request, _cancellationTokenSource.Token).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
                         var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                         Logger.Trace(() => $"UNLEASH: Error {response.StatusCode} from server in 'ToggleBootstrapUrlProvider.{nameof(FetchFile)}': " + error);
 
-                        if (throwOnFail)
+                        if (_throwOnFail)
+                        {
                             throw new FetchingToggleBootstrapUrlFailedException("Failed to fetch feature toggles", response.StatusCode);
+                        }
 
                         return null;
                     }
@@ -64,14 +66,16 @@ namespace Unleash.Utilities
                     try
                     {
                         var togglesResponseStream = await response.Content.ReadAsStreamAsync();
-                        return settings.JsonSerializer.Deserialize<ToggleCollection>(togglesResponseStream);
+                        return _settings.JsonSerializer.Deserialize<ToggleCollection>(togglesResponseStream);
                     }
                     catch (Exception ex)
                     {
                         Logger.Trace(() => $"UNLEASH: Exception in 'ToggleBootstrapUrlProvider.{nameof(FetchFile)}' during reading and deserializing ToggleCollection from stream: " + ex.Message);
 
-                        if (throwOnFail)
+                        if (_throwOnFail)
+                        {
                             throw new UnleashException("Exception during reading and deserializing ToggleCollection from stream", ex);
+                        }
 
                         return null;
                     }

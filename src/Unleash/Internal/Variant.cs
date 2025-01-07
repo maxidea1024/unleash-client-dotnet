@@ -8,13 +8,13 @@ namespace Unleash.Internal
 
         public string Name { get; }
 
-        public Payload Payload { get; }
+        public Payload? Payload { get; }
 
         public bool IsEnabled { get; }
 
         public bool FeatureEnabled { get; internal set; }
 
-        public Variant(string name, Payload payload, bool enabled, bool featureEnabled)
+        public Variant(string name, Payload? payload, bool enabled, bool featureEnabled)
         {
             Name = name;
             Payload = payload;

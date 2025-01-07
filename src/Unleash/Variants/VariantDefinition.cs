@@ -9,12 +9,16 @@ namespace Unleash.Variants
     public class VariantDefinition
     {
         public string Name { get; set; }
-        public int Weight { get; set; }
-        public Payload Payload { get; set; }
-        public ICollection<VariantOverride> Overrides { get; set; }
-        public string Stickiness { get; set; }
 
-        public VariantDefinition(string name, int weight, Payload payload = null, ICollection<VariantOverride> overrides = null, string stickiness = null)
+        public int Weight { get; set; }
+
+        public Payload? Payload { get; set; }
+
+        public ICollection<VariantOverride>? Overrides { get; set; }
+
+        public string? Stickiness { get; set; }
+
+        public VariantDefinition(string name, int weight, Payload? payload = null, ICollection<VariantOverride>? overrides = null, string? stickiness = null)
         {
             Name = name;
             Weight = weight;

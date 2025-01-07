@@ -33,13 +33,10 @@ namespace Unleash
             new FlexibleRolloutStrategy()
         };
 
-        private readonly UnleashSettings settings;
-
-        private readonly Dictionary<string, IStrategy> strategyMap;
-
-        internal readonly UnleashServices services;
-
-        private readonly WarnOnce warnOnce;
+        private readonly UnleashSettings _settings;
+        private readonly Dictionary<string, IStrategy> _strategyMap;
+        internal readonly UnleashServices _services;
+        private readonly WarnOnce _warnOnce;
 
         ///// <summary>
         ///// Initializes a new instance of Unleash client with a set of default strategies.
@@ -60,19 +57,19 @@ namespace Unleash
         {
             var currentInstanceNo = Interlocked.Increment(ref InitializedInstanceCount);
 
-            this.settings = settings;
+            _settings = settings;
 
-            warnOnce = new WarnOnce(Logger);
+            _warnOnce = new WarnOnce(Logger);
 
             var settingsValidator = new UnleashSettingsValidator();
-            settingsValidator.Validate(settings);
+            settingsValidator.Validate(_settings);
 
             strategies = SelectStrategies(strategies, overrideDefaultStrategies);
-            strategyMap = BuildStrategyMap(strategies);
+            _strategyMap = BuildStrategyMap(strategies);
 
-            services = new UnleashServices(settings, EventConfig, strategyMap);
+            _services = new UnleashServices(settings, EventConfig, strategyMap);
 
-            Logger.Info(() => $"UNLEASH: Unleash instance number { currentInstanceNo } is initialized and configured with: {settings}");
+            Logger.Info(() => $"UNLEASH: Unleash instance number {currentInstanceNo} is initialized and configured with: {_settings}");
 
             if (currentInstanceNo >= ErrorOnInstanceCount)
             {
@@ -82,7 +79,7 @@ namespace Unleash
         }
 
         /// <inheritdoc />
-        public ICollection<FeatureToggle> FeatureToggles => services.ToggleCollection.Instance.Features;
+        public ICollection<FeatureToggle> FeatureToggles => _services.ToggleCollection.Instance.Features;
 
         private EventCallbackConfig EventConfig { get; } = new EventCallbackConfig();
 
@@ -95,7 +92,7 @@ namespace Unleash
         /// <inheritdoc />
         public bool IsEnabled(string toggleName, bool defaultSetting)
         {
-            return IsEnabled(toggleName, services.ContextProvider.Context, defaultSetting);
+            return IsEnabled(toggleName, _services.ContextProvider.Context, defaultSetting);
         }
 
         public bool IsEnabled(string toggleName, UnleashContext context)
@@ -121,7 +118,8 @@ namespace Unleash
             var enhancedContext = context.ApplyStaticFields(settings);
             var enabled = DetermineIsEnabledAndStrategy(toggleName, featureToggle, enhancedContext, defaultSetting, out var strategy);
             var variant = DetermineVariant(enabled, featureToggle, strategy, enhancedContext, defaultVariant);
-            if (variant != null) {
+            if (variant != null)
+            {
                 variant.FeatureEnabled = enabled;
             }
 
@@ -138,22 +136,20 @@ namespace Unleash
             FeatureToggle featureToggle,
             UnleashContext enhancedContext,
             bool defaultSetting,
-            out ActivationStrategy strategy)
+            out ActivationStrategy? strategy)
         {
             strategy = null;
+
             if (featureToggle == null)
             {
                 Logger.Warn(() => $"UNLEASH: Feature flag {toggleName} not present, returning default setting: {defaultSetting}");
-
                 return defaultSetting;
             }
-
             else if (!featureToggle.Enabled)
             {
                 // Overall false
                 return false;
             }
-
             else if (featureToggle.Strategies.Count == 0)
             {
                 return true;
@@ -190,15 +186,17 @@ namespace Unleash
                 return false;
             }
 
-            if (parentToggle.Dependencies.Any()) {
+            if (parentToggle.Dependencies.Any())
+            {
                 return false;
             }
 
-            if (dependency.Enabled) {
+            if (dependency.Enabled)
+            {
                 if (dependency.Variants != null && dependency.Variants.Any())
                 {
                     var checkResult = CheckIsEnabled(dependency.Feature, context, false, Variant.DISABLED_VARIANT);
-                    return checkResult.Enabled  && dependency.Variants.Contains(checkResult.Variant.Name);
+                    return checkResult.Enabled && dependency.Variants.Contains(checkResult.Variant.Name);
                 }
                 return CheckIsEnabled(dependency.Feature, context, false).Enabled;
             }
@@ -280,7 +278,7 @@ namespace Unleash
             return toggle?.Variants;
         }
 
-        private FeatureToggle GetToggle(string toggleName)
+        private FeatureToggle? GetToggle(string toggleName)
         {
             return services
                 .ToggleCollection
@@ -321,7 +319,9 @@ namespace Unleash
             var map = new Dictionary<string, IStrategy>(strategies.Length);
 
             foreach (var strategy in strategies)
+            {
                 map.Add(strategy.Name, strategy);
+            }
 
             return map;
         }
@@ -337,7 +337,7 @@ namespace Unleash
         {
             foreach (var segmentId in activationStrategy.Segments)
             {
-                var segment = services.ToggleCollection.Instance.GetSegmentById(segmentId);
+                var segment = _services.ToggleCollection.Instance.GetSegmentById(segmentId);
                 if (segment != null)
                 {
                     foreach (var constraint in segment.Constraints)
@@ -370,7 +370,7 @@ namespace Unleash
             }
         }
 
-        private void EmitImpressionEvent(string type, UnleashContext context, bool enabled, string name, string variant = null)
+        private void EmitImpressionEvent(string type, UnleashContext context, bool enabled, string name, string? variant = null)
         {
             if (EventConfig?.ImpressionEvent == null)
             {
@@ -398,7 +398,7 @@ namespace Unleash
 
         public void Dispose()
         {
-            services?.Dispose();
+            _services?.Dispose();
         }
     }
 }

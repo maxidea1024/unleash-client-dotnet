@@ -13,12 +13,13 @@ namespace Unleash.Strategies
         public static string HostNamesParam = "hostNames";
 
         protected readonly string NameConst = "applicationHostname";
-        private readonly string hostname;
+        private readonly string _hostname;
 
         /// <inheritdoc />
         public ApplicationHostnameStrategy()
         {
-            hostname = Environment.GetEnvironmentVariable("hostname") ?? Dns.GetHostName();
+            // TODO 한번만 가져오면 될듯.
+            _hostname = Environment.GetEnvironmentVariable("hostname") ?? Dns.GetHostName();
         }
 
         /// <inheritdoc />
@@ -30,13 +31,15 @@ namespace Unleash.Strategies
             if (parameters.TryGetValue(HostNamesParam, out var hostnames))
             {
                 if (hostnames == null || hostnames == string.Empty)
+                {
                     return false;
+                }
 
                 return hostnames
                     .ToLowerInvariant()
                     .Split(',')
                     .Select(x => x.Trim())
-                    .Contains(hostname.ToLowerInvariant());
+                    .Contains(_hostname.ToLowerInvariant());
             }
 
             return false;

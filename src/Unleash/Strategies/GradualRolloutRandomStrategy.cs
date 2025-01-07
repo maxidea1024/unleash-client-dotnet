@@ -9,16 +9,16 @@ namespace Unleash.Strategies
         private static readonly string Percentage = "percentage";
         private static readonly string StrategyName = "gradualRolloutRandom";
 
-        private readonly Random random;
+        private readonly Random _random;
 
         public GradualRolloutRandomStrategy()
         {
-            random = new Random(Guid.NewGuid().GetHashCode());
+            _random = new Random(Guid.NewGuid().GetHashCode());
         }
 
         public GradualRolloutRandomStrategy(int seed)
         {
-            random = new Random(seed);
+            _random = new Random(seed);
         }
 
         public string Name => StrategyName;
@@ -26,10 +26,12 @@ namespace Unleash.Strategies
         public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context = null)
         {
             if (!parameters.TryGetValue(Percentage, out var value))
+            {
                 return false;
+            }
 
             var percentage = StrategyUtils.GetPercentage(value);
-            var randomNumber = random.Next(100) + 1;
+            var randomNumber = _random.Next(100) + 1;
 
             return percentage >= randomNumber;
         }

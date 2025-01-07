@@ -23,7 +23,7 @@ namespace Unleash
         /// <summary>
         /// Default: null
         /// </summary>
-        public Dictionary<string, string> CustomDefaultHttpHeaders { get; set; }
+        public Dictionary<string, string>? CustomDefaultHttpHeaders { get; set; }
 
         /// <summary>
         /// Default: empty dictionary

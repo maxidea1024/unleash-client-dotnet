@@ -22,14 +22,18 @@ namespace Unleash.Strategies
 
         public string Name => "gradualRolloutSessionId";
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context = null)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext? context = null)
         {
             var sessionId = context?.SessionId;
             if (sessionId == null || sessionId == string.Empty)
+            {
                 return false;
+            }
 
             if (!(parameters.ContainsKey(Percentage) && parameters.ContainsKey(GroupId)))
+            {
                 return false;
+            }
 
             var percentageString = parameters[Percentage];
             var percentage = StrategyUtils.GetPercentage(percentageString);
