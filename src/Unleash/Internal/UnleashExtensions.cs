@@ -35,10 +35,14 @@ namespace Unleash.Internal
         internal static void SafeTimerChange(this Timer timer, dynamic dueTime, dynamic period, ref bool disposeEnded)
         {
             if (dueTime.GetType() != period.GetType())
+            {
                 throw new Exception("Data types has to match. (Int32 or TimeSpan)");
+            }
 
             if (!(dueTime.GetType() != typeof(int) || dueTime.GetType() != typeof(TimeSpan)))
+            {
                 throw new Exception("Only System.Int32 or System.TimeSpan");
+            }
 
             try
             {
@@ -82,7 +86,9 @@ namespace Unleash.Internal
             {
                 var hostname = Environment.GetEnvironmentVariable("hostname");
                 if (hostname != null)
+                {
                     return hostname;
+                }
 
                 var host = Dns.GetHostEntry(Dns.GetHostName());
 
@@ -96,9 +102,9 @@ namespace Unleash.Internal
 
                 return "undefined-ip-address";
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Logger.Trace(() => "UNLEASH: Failed to extract local ip address", exception);
+                Logger.Trace(() => "UNLEASH: Failed to extract local ip address", ex);
                 return "undefined";
             }
         }

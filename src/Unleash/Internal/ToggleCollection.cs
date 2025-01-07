@@ -14,25 +14,26 @@ namespace Unleash.Internal
     {
         public int Version = 1;
 
-        private readonly Dictionary<string, FeatureToggle> togglesCache;
+        private readonly Dictionary<string, FeatureToggle> _togglesCache;
 
-        private readonly Dictionary<int, Segment> segmentsCache;
+        private readonly Dictionary<int, Segment> _segmentsCache;
 
-        public ToggleCollection(ICollection<FeatureToggle> features = null, ICollection<Segment> segments = null)
+        public ToggleCollection(ICollection<FeatureToggle>? features = null, ICollection<Segment>? segments = null)
         {
             Features = features ?? new List<FeatureToggle>(0);
             Segments = segments ?? new List<Segment>(0);
 
-            togglesCache = new Dictionary<string, FeatureToggle>(Features.Count);
-            segmentsCache = new Dictionary<int, Segment>(Segments.Count);
+            _togglesCache = new Dictionary<string, FeatureToggle>(Features.Count);
+            _segmentsCache = new Dictionary<int, Segment>(Segments.Count);
 
-            foreach (var featureToggle in Features) {
-                togglesCache.Add(featureToggle.Name, featureToggle);
+            foreach (var featureToggle in Features)
+            {
+                _togglesCache.Add(featureToggle.Name, featureToggle);
             }
 
             foreach (var segment in Segments)
             {
-                segmentsCache.Add(segment.Id, segment);
+                _segmentsCache.Add(segment.Id, segment);
             }
         }
 
@@ -42,14 +43,14 @@ namespace Unleash.Internal
 
         public FeatureToggle GetToggleByName(string name)
         {
-            return togglesCache.TryGetValue(name, out var value) 
-                ? value 
+            return _togglesCache.TryGetValue(name, out var value)
+                ? value
                 : null;
         }
 
         public Segment GetSegmentById(int id)
         {
-            return segmentsCache.TryGetValue(id, out var value)
+            return _segmentsCache.TryGetValue(id, out var value)
                 ? value
                 : null;
         }

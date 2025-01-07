@@ -16,21 +16,29 @@ namespace Unleash.Internal
         {
             // Success. Overridden by client..
             if (!(jsonSerializer is IDynamicJsonSerializer))
+            {
                 return jsonSerializer;
+            }
 
             var serializer = jsonSerializer as IDynamicJsonSerializer;
             if (serializer.TryLoad())
+            {
                 return jsonSerializer;
+            }
 
             // Failed to load default. Try the other ones if any..
             foreach (var dynamicJsonSerializer in DynamicJsonSerializers)
             {
                 // Ignore: same as above
                 if (dynamicJsonSerializer.Equals(jsonSerializer))
+                {
                     continue;
+                }
 
                 if (!dynamicJsonSerializer.TryLoad())
+                {
                     continue;
+                }
 
                 // Success, found a compatible json serializer
                 return dynamicJsonSerializer;

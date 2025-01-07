@@ -5,7 +5,21 @@ namespace Unleash.Internal
 {
     public class FeatureToggle
     {
-        public FeatureToggle(string name, string type, bool enabled, bool impressionData, List<ActivationStrategy> strategies, List<VariantDefinition> variants = null, List<Dependency> dependencies = null)
+        public string Name { get; }
+
+        public string Type { get; }
+
+        public bool Enabled { get; }
+
+        public bool ImpressionData { get; }
+
+        public List<ActivationStrategy> Strategies { get; }
+
+        public List<VariantDefinition> Variants { get; }
+
+        public List<Dependency> Dependencies { get; }
+
+        public FeatureToggle(string name, string type, bool enabled, bool impressionData, List<ActivationStrategy>? strategies = null, List<VariantDefinition>? variants = null, List<Dependency>? dependencies = null)
         {
             Name = name;
             Type = type;
@@ -15,17 +29,6 @@ namespace Unleash.Internal
             Variants = variants ?? new List<VariantDefinition>();
             Dependencies = dependencies ?? new List<Dependency>();
         }
-
-        public string Name { get; }
-        public string Type { get; }
-        public bool Enabled { get; }
-        public bool ImpressionData { get; }
-
-        public List<ActivationStrategy> Strategies { get; }
-
-        public List<VariantDefinition> Variants { get; }
-
-        public List<Dependency> Dependencies { get; }
 
         public override string ToString()
         {

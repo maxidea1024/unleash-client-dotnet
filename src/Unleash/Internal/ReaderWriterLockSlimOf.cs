@@ -16,49 +16,47 @@ namespace Unleash.Internal
     /// </summary>
     internal class ReaderWriterLockSlimOf<T> : IObjectLock<T>
     {
-        private readonly ReaderWriterLockSlim @lock;
+        private readonly ReaderWriterLockSlim _lock;
 
         public ReaderWriterLockSlimOf(LockRecursionPolicy recursionPolicy = LockRecursionPolicy.NoRecursion)
         {
-            @lock = new ReaderWriterLockSlim(recursionPolicy);
+            _lock = new ReaderWriterLockSlim(recursionPolicy);
         }
 
-        private T instance;
+        private T _instance;
         public T Instance
         {
             get
             {
-                // Read
-                @lock.EnterReadLock();
+                _lock.EnterReadLock();
                 try
                 {
-                    return instance;
+                    return _instance;
                 }
                 finally
                 {
-                    @lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             set
             {
-                // Write
-                @lock.EnterWriteLock();
+                _lock.EnterWriteLock();
                 try
                 {
-                    instance = value;
+                    _instance = value;
                 }
                 finally
                 {
-                    @lock.ExitWriteLock();
+                    _lock.ExitWriteLock();
                 }
             }
         }
 
-        public int CurrentReadCount => @lock.CurrentReadCount;
+        public int CurrentReadCount => _lock.CurrentReadCount;
 
         public void Dispose()
         {
-            @lock?.Dispose();
+            _lock?.Dispose();
         }
     }
 }
