@@ -73,15 +73,21 @@ namespace Unleash.Communication
             featureRequestsSkipped = 0;
 
             string resourceUri = "client/features";
+
+            // TODO deprecated?
             if (!string.IsNullOrWhiteSpace(this.projectId))
+            {
                 resourceUri += "?project=" + this.projectId;
+            }
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, resourceUri))
             {
                 SetRequestHeaders(request, clientRequestHeaders);
 
                 if (EntityTagHeaderValue.TryParse(etag, out var etagHeaderValue))
+                {
                     request.Headers.IfNoneMatch.Add(etagHeaderValue);
+                }
 
                 using (var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
@@ -282,6 +288,7 @@ namespace Unleash.Communication
 
         private static void SetRequestHeaders(HttpRequestMessage requestMessage, UnleashApiClientRequestHeaders headers)
         {
+            // TODO rename
             const string appNameHeader = "UNLEASH-APPNAME";
             const string userAgentHeader = "User-Agent";
             const string instanceIdHeader = "UNLEASH-INSTANCEID";
@@ -300,13 +307,19 @@ namespace Unleash.Communication
         private static void SetCustomHeaders(HttpRequestMessage requestMessage, Dictionary<string, string> headers)
         {
             if (headers == null)
+            {
                 return;
+            }
 
             if (headers.Count == 0)
+            {
                 return;
+            }
 
             foreach (var header in headers)
+            {
                 requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
         }
     }
 }

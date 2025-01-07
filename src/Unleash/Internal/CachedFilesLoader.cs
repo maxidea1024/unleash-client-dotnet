@@ -9,6 +9,7 @@ namespace Unleash.Internal
     internal class CachedFilesLoader
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(FetchFeatureTogglesTask));
+
         private readonly IJsonSerializer jsonSerializer;
         private readonly IFileSystem fileSystem;
         private readonly IToggleBootstrapProvider toggleBootstrapProvider;
@@ -105,7 +106,9 @@ namespace Unleash.Internal
             {
                 var bootstrapCollection = toggleBootstrapProvider.Read();
                 if (bootstrapCollection != null && bootstrapCollection.Features?.Count > 0)
+                {
                     result.InitialToggleCollection = bootstrapCollection;
+                }
             }
 
             return result;
@@ -114,6 +117,7 @@ namespace Unleash.Internal
         internal class CachedFilesResult
         {
             public string InitialETag { get; set; }
+
             public ToggleCollection InitialToggleCollection { get; set; }
         }
     }
