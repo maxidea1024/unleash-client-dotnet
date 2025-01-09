@@ -18,11 +18,12 @@ namespace Unleash
 
         private static readonly UnknownStrategy UnknownStrategy = new UnknownStrategy();
 
-        private static int InitializedInstanceCount = 0;
+        private static int INITIALIZED_INSTANCE_COUNT = 0;
 
-        private const int ErrorOnInstanceCount = 10;
+        private const int ERROR_ON_INSTANCE_COUNT = 10;
 
-        private static readonly IStrategy[] DefaultStrategies = {
+        private static readonly IStrategy[] DefaultStrategies =
+        {
             new DefaultStrategy(),
             new UserWithIdStrategy(),
             new GradualRolloutUserIdStrategy(),
@@ -35,7 +36,7 @@ namespace Unleash
 
         private readonly UnleashSettings _settings;
         private readonly Dictionary<string, IStrategy> _strategyMap;
-        internal readonly UnleashServices _services;
+        internal readonly UnleashServices Services;
         private readonly WarnOnce _warnOnce;
 
         ///// <summary>
@@ -45,7 +46,8 @@ namespace Unleash
         ///// <param name="strategies">Additional custom strategies.</param>
         public DefaultUnleash(UnleashSettings settings, params IStrategy[] strategies)
             : this(settings, overrideDefaultStrategies: false, strategies)
-        { }
+        {
+        }
 
         ///// <summary>
         ///// Initializes a new instance of Unleash client.
@@ -55,31 +57,32 @@ namespace Unleash
         ///// <param name="strategies">Custom strategies.</param>
         public DefaultUnleash(UnleashSettings settings, bool overrideDefaultStrategies, params IStrategy[] strategies)
         {
-            var currentInstanceNo = Interlocked.Increment(ref InitializedInstanceCount);
+            var currentInstanceNo = Interlocked.Increment(ref INITIALIZED_INSTANCE_COUNT);
 
             _settings = settings;
 
             _warnOnce = new WarnOnce(Logger);
 
-            var settingsValidator = new UnleashSettingsValidator();
-            settingsValidator.Validate(_settings);
+            UnleashSettingsValidator.Validate(_settings);
 
             strategies = SelectStrategies(strategies, overrideDefaultStrategies);
             _strategyMap = BuildStrategyMap(strategies);
 
-            _services = new UnleashServices(settings, EventConfig, strategyMap);
+            Services = new UnleashServices(settings, EventConfig, _strategyMap);
 
-            Logger.Info(() => $"UNLEASH: Unleash instance number {currentInstanceNo} is initialized and configured with: {_settings}");
+            Logger.Info(() =>
+                $"UNLEASH: Unleash instance number {currentInstanceNo} is initialized and configured with: {_settings}");
 
-            if (currentInstanceNo >= ErrorOnInstanceCount)
+            if (currentInstanceNo >= ERROR_ON_INSTANCE_COUNT)
             {
                 Logger.Error(() => $"UNLEASH: Unleash instance count for this process is now {currentInstanceNo}.");
-                Logger.Error(() => "Ideally you should only need 1 instance of Unleash per app/process, we strongly recommend setting up Unleash as a singleton.");
+                Logger.Error(() =>
+                    "Ideally you should only need 1 instance of Unleash per app/process, we strongly recommend setting up Unleash as a singleton.");
             }
         }
 
         /// <inheritdoc />
-        public ICollection<FeatureToggle> FeatureToggles => _services.ToggleCollection.Instance.Features;
+        public ICollection<FeatureToggle> FeatureToggles => Services.ToggleCollection.Instance.Features;
 
         private EventCallbackConfig EventConfig { get; } = new EventCallbackConfig();
 
@@ -92,7 +95,7 @@ namespace Unleash
         /// <inheritdoc />
         public bool IsEnabled(string toggleName, bool defaultSetting)
         {
-            return IsEnabled(toggleName, _services.ContextProvider.Context, defaultSetting);
+            return IsEnabled(toggleName, Services.ContextProvider.Context, defaultSetting);
         }
 
         public bool IsEnabled(string toggleName, UnleashContext context)
@@ -104,7 +107,6 @@ namespace Unleash
         {
             var enabled = CheckIsEnabled(toggleName, context, defaultSetting).Enabled;
             RegisterCount(toggleName, enabled);
-
             return enabled;
         }
 
@@ -115,8 +117,9 @@ namespace Unleash
             Variant defaultVariant = null)
         {
             var featureToggle = GetToggle(toggleName);
-            var enhancedContext = context.ApplyStaticFields(settings);
-            var enabled = DetermineIsEnabledAndStrategy(toggleName, featureToggle, enhancedContext, defaultSetting, out var strategy);
+            var enhancedContext = context.ApplyStaticFields(_settings);
+            var enabled = DetermineIsEnabledAndStrategy(toggleName, featureToggle, enhancedContext, defaultSetting,
+                out var strategy);
             var variant = DetermineVariant(enabled, featureToggle, strategy, enhancedContext, defaultVariant);
             if (variant != null)
             {
@@ -142,7 +145,8 @@ namespace Unleash
 
             if (featureToggle == null)
             {
-                Logger.Warn(() => $"UNLEASH: Feature flag {toggleName} not present, returning default setting: {defaultSetting}");
+                Logger.Warn(() =>
+                    $"UNLEASH: Feature flag {toggleName} not present, returning default setting: {defaultSetting}");
                 return defaultSetting;
             }
             else if (!featureToggle.Enabled)
@@ -182,7 +186,8 @@ namespace Unleash
             var parentToggle = GetToggle(dependency.Feature);
             if (parentToggle == null)
             {
-                warnOnce.Warn(dependency.Feature + featureToggle.Name, $"UNLEASH: Parent feature toggle {dependency.Feature} was not found in the cache, the evaluation of this dependency will always be false");
+                _warnOnce.Warn(dependency.Feature + featureToggle.Name,
+                    $"UNLEASH: Parent feature toggle {dependency.Feature} was not found in the cache, the evaluation of this dependency will always be false");
                 return false;
             }
 
@@ -191,17 +196,18 @@ namespace Unleash
                 return false;
             }
 
-            if (dependency.Enabled)
+            if (!dependency.Enabled)
             {
-                if (dependency.Variants != null && dependency.Variants.Any())
-                {
-                    var checkResult = CheckIsEnabled(dependency.Feature, context, false, Variant.DISABLED_VARIANT);
-                    return checkResult.Enabled && dependency.Variants.Contains(checkResult.Variant.Name);
-                }
+                return !CheckIsEnabled(dependency.Feature, context, false).Enabled;
+            }
+
+            if (dependency.Variants == null || !dependency.Variants.Any())
+            {
                 return CheckIsEnabled(dependency.Feature, context, false).Enabled;
             }
 
-            return !CheckIsEnabled(dependency.Feature, context, false).Enabled;
+            var checkResult = CheckIsEnabled(dependency.Feature, context, false, Variant.DISABLED_VARIANT);
+            return checkResult.Enabled && dependency.Variants.Contains(checkResult.Variant.Name);
         }
 
         private Variant DetermineVariant(bool enabled,
@@ -212,14 +218,16 @@ namespace Unleash
         {
             if (enabled)
             {
-                Variant variant = null;
+                Variant? variant = null;
 
-                if (strategy != null)
+                if (strategy == null)
                 {
-                    strategy.Parameters.TryGetValue("groupId", out string groupId);
-                    groupId = groupId ?? featureToggle.Name;
-                    variant = VariantUtils.SelectVariant(groupId, context, strategy.Variants, strategy.Parameters);
+                    return variant ?? VariantUtils.SelectVariant(featureToggle, context, defaultVariant);
                 }
+
+                strategy.Parameters.TryGetValue("groupId", out var groupId);
+                groupId = groupId ?? featureToggle.Name;
+                variant = VariantUtils.SelectVariant(groupId, context, strategy.Variants, strategy.Parameters);
 
                 return variant ?? VariantUtils.SelectVariant(featureToggle, context, defaultVariant);
             }
@@ -231,12 +239,12 @@ namespace Unleash
 
         public Variant GetVariant(string toggleName)
         {
-            return GetVariant(toggleName, services.ContextProvider.Context, Variant.DISABLED_VARIANT);
+            return GetVariant(toggleName, Services.ContextProvider.Context, Variant.DISABLED_VARIANT);
         }
 
         public Variant GetVariant(string toggleName, Variant defaultVariant)
         {
-            return GetVariant(toggleName, services.ContextProvider.Context, defaultVariant);
+            return GetVariant(toggleName, Services.ContextProvider.Context, defaultVariant);
         }
 
         public Variant GetVariant(string toggleName, UnleashContext context)
@@ -254,11 +262,12 @@ namespace Unleash
 
             RegisterVariant(toggleName, evaluationResult.Variant);
 
-            var enhancedContext = context.ApplyStaticFields(settings);
+            var enhancedContext = context.ApplyStaticFields(_settings);
 
             if (toggle?.ImpressionData ?? false)
             {
-                EmitImpressionEvent("getVariant", enhancedContext, evaluationResult.Enabled, toggle.Name, evaluationResult.Variant?.Name);
+                EmitImpressionEvent("getVariant", enhancedContext, evaluationResult.Enabled, toggle.Name,
+                    evaluationResult.Variant?.Name);
             }
 
             return evaluationResult.Variant;
@@ -266,7 +275,7 @@ namespace Unleash
 
         public IEnumerable<VariantDefinition> GetVariants(string toggleName)
         {
-            return GetVariants(toggleName, services.ContextProvider.Context);
+            return GetVariants(toggleName, Services.ContextProvider.Context);
         }
 
         public IEnumerable<VariantDefinition> GetVariants(string toggleName, UnleashContext context)
@@ -280,7 +289,7 @@ namespace Unleash
 
         private FeatureToggle? GetToggle(string toggleName)
         {
-            return services
+            return Services
                 .ToggleCollection
                 .Instance
                 .GetToggleByName(toggleName);
@@ -288,25 +297,29 @@ namespace Unleash
 
         private void RegisterCount(string toggleName, bool enabled)
         {
-            if (services.IsMetricsDisabled)
+            if (Services.IsMetricsDisabled)
+            {
                 return;
+            }
 
-            services.MetricsBucket.RegisterCount(toggleName, enabled);
+            Services.MetricsBucket.RegisterCount(toggleName, enabled);
         }
 
         private void RegisterVariant(string toggleName, Variant variant)
         {
-            if (services.IsMetricsDisabled)
+            if (Services.IsMetricsDisabled)
+            {
                 return;
+            }
 
-            services.MetricsBucket.RegisterCount(toggleName, variant.Name);
+            Services.MetricsBucket.RegisterCount(toggleName, variant.Name);
         }
 
         private static IStrategy[] SelectStrategies(IStrategy[] strategies, bool overrideDefaultStrategies)
         {
             if (overrideDefaultStrategies)
             {
-                return strategies ?? new IStrategy[0];
+                return strategies ?? Array.Empty<IStrategy>();
             }
             else
             {
@@ -328,16 +341,16 @@ namespace Unleash
 
         private IStrategy GetStrategyOrUnknown(string strategy)
         {
-            return strategyMap.ContainsKey(strategy)
-                ? strategyMap[strategy]
+            return _strategyMap.TryGetValue(strategy, out var value)
+                ? value
                 : UnknownStrategy;
         }
 
         private IEnumerable<Constraint> ResolveConstraints(ActivationStrategy activationStrategy)
         {
-            foreach (var segmentId in activationStrategy.Segments)
+            foreach (var segment in activationStrategy.Segments.Select(segmentId =>
+                         Services.ToggleCollection.Instance.GetSegmentById(segmentId)))
             {
-                var segment = _services.ToggleCollection.Instance.GetSegmentById(segmentId);
                 if (segment != null)
                 {
                     foreach (var constraint in segment.Constraints)
@@ -366,11 +379,13 @@ namespace Unleash
             }
             catch (Exception ex)
             {
-                Logger.Error(() => $"UNLEASH: Unleash->ConfigureEvents executing callback threw exception: {ex.Message}");
+                Logger.Error(
+                    () => $"UNLEASH: Unleash->ConfigureEvents executing callback threw exception: {ex.Message}");
             }
         }
 
-        private void EmitImpressionEvent(string type, UnleashContext context, bool enabled, string name, string? variant = null)
+        private void EmitImpressionEvent(string type, UnleashContext context, bool enabled, string name,
+            string? variant = null)
         {
             if (EventConfig?.ImpressionEvent == null)
             {
@@ -398,7 +413,7 @@ namespace Unleash
 
         public void Dispose()
         {
-            _services?.Dispose();
+            Services?.Dispose();
         }
     }
 }

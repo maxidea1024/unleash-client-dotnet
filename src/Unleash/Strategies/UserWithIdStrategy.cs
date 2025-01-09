@@ -7,7 +7,7 @@ namespace Unleash.Strategies
     /// <inheritdoc />
     public class UserWithIdStrategy : IStrategy
     {
-        internal readonly string UserIdsConst = "userIds";
+        private const string USER_IDS_CONST = "userIds";
 
         /// <inheritdoc />
         public string Name => "userWithId";
@@ -16,26 +16,27 @@ namespace Unleash.Strategies
         public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext? context = null)
         {
             var userId = context?.UserId;
-            if (userId == null || userId == string.Empty)
+            if (string.IsNullOrEmpty(userId))
             {
                 return false;
             }
 
-            if (!parameters.TryGetValue(UserIdsConst, out var userIds))
+            if (!parameters.TryGetValue(USER_IDS_CONST, out var userIds))
             {
                 return false;
             }
 
-            const string commaDelimeter = ",";
+            const string commaDelimiter = ",";
             const string space = " ";
 
-            var idsLocal = string.Concat(commaDelimeter, userIds.Replace(space, string.Empty), commaDelimeter);
-            var userLocal = string.Concat(commaDelimeter, userId.Replace(space, string.Empty), commaDelimeter);
+            var idsLocal = string.Concat(commaDelimiter, userIds.Replace(space, string.Empty), commaDelimiter);
+            var userLocal = string.Concat(commaDelimiter, userId.Replace(space, string.Empty), commaDelimiter);
 
             return idsLocal.IndexOf(userLocal, StringComparison.Ordinal) > -1;
         }
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context,
+            IEnumerable<Constraint> constraints)
         {
             return StrategyUtils.IsEnabled(this, parameters, context, constraints);
         }

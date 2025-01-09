@@ -6,8 +6,8 @@ namespace Unleash.Strategies
 {
     public class FlexibleRolloutStrategy : IStrategy
     {
-        protected static readonly string Percentage = "rollout";
-        protected static readonly string GroupId = "groupId";
+        public static readonly string Percentage = "rollout";
+        public static readonly string GroupId = "groupId";
 
         public string Name => "flexibleRollout";
         private Func<string> _randomGenerator;
@@ -23,7 +23,8 @@ namespace Unleash.Strategies
             _randomGenerator = randomGenerator;
         }
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context,
+            IEnumerable<Constraint> constraints)
         {
             return StrategyUtils.IsEnabled(this, parameters, context, constraints);
         }
@@ -32,7 +33,9 @@ namespace Unleash.Strategies
         {
             var stickiness = GetStickiness(parameters);
             var stickinessId = ResolveStickiness(stickiness, context);
-            var percentage = StrategyUtils.GetPercentage(parameters.TryGetValue(Percentage, out var percentageString) ? percentageString : null);
+            var percentage = StrategyUtils.GetPercentage(parameters.TryGetValue(Percentage, out var percentageString)
+                ? percentageString
+                : null);
             parameters.TryGetValue(GroupId, out var groupId);
 
             if (string.IsNullOrEmpty(groupId))
@@ -62,11 +65,11 @@ namespace Unleash.Strategies
             switch (stickiness)
             {
                 case "random":
-                    return randomGenerator();
+                    return _randomGenerator();
                 case "default":
                     return context?.UserId
-                        ?? context?.SessionId
-                        ?? randomGenerator();
+                           ?? context?.SessionId
+                           ?? _randomGenerator();
                 default:
                     return context.GetByName(stickiness);
             }

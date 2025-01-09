@@ -18,9 +18,8 @@ namespace Unleash.Strategies
         public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext? context = null)
         {
             var remoteAddress = context?.RemoteAddress;
-            IPAddress remoteIPAddress;
 
-            if (string.IsNullOrEmpty(remoteAddress) || !IPAddress.TryParse(remoteAddress, out remoteIPAddress))
+            if (string.IsNullOrEmpty(remoteAddress) || !IPAddress.TryParse(remoteAddress, out var remoteIpAddress))
             {
                 return false;
             }
@@ -45,7 +44,7 @@ namespace Unleash.Strategies
                 }
 
                 return addressRanges
-                    .Any(range => range.Contains(remoteIPAddress));
+                    .Any(range => range.Contains(remoteIpAddress));
             }
 
             return false;
@@ -62,14 +61,16 @@ namespace Unleash.Strategies
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(() => $"UNLEASH: RemoteAddressStrategy->ToAddressRanges threw exception: {ex.Message}. (Badly formatted IP/CIDR?)");
+                    Logger.Error(() =>
+                        $"UNLEASH: RemoteAddressStrategy->ToAddressRanges threw exception: {ex.Message}. (Badly formatted IP/CIDR?)");
                 }
             }
 
             return addressRanges;
         }
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context,
+            IEnumerable<Constraint> constraints)
         {
             return StrategyUtils.IsEnabled(this, parameters, context, constraints);
         }

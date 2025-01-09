@@ -24,6 +24,7 @@ namespace Unleash.Internal
         }
 
         private T _instance;
+
         public T Instance
         {
             get

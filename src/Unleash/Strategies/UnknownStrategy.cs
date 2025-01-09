@@ -12,7 +12,8 @@ namespace Unleash.Strategies
             return false;
         }
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context,
+            IEnumerable<Constraint> constraints)
         {
             return StrategyUtils.IsEnabled(this, parameters, context, constraints);
         }

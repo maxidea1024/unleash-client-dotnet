@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Unleash.Variants;
-
-namespace Unleash.Internal
+﻿namespace Unleash.Internal
 {
     internal class FeatureEvaluationResult
     {

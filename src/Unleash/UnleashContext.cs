@@ -27,7 +27,8 @@ namespace Unleash
             Properties = new Dictionary<string, string>();
         }
 
-        public UnleashContext(string appName, string environment, string userId, string sessionId, string remoteAddress, DateTimeOffset? currentTime, Dictionary<string, string> properties)
+        public UnleashContext(string appName, string environment, string userId, string sessionId, string remoteAddress,
+            DateTimeOffset? currentTime, Dictionary<string, string> properties)
         {
             AppName = appName;
             Environment = environment;
@@ -53,8 +54,7 @@ namespace Unleash
                 case "remoteAddress":
                     return RemoteAddress;
                 default:
-                    string result;
-                    Properties.TryGetValue(contextName, out result);
+                    Properties.TryGetValue(contextName, out var result);
                     return result;
             }
         }
@@ -99,7 +99,7 @@ namespace Unleash
 
             public Builder AppName(string appName)
             {
-                _sessionIdappName = appName;
+                _appName = appName;
                 return this;
             }
 
@@ -141,12 +141,13 @@ namespace Unleash
 
             public Builder AddProperty(string name, string value)
             {
-                properties.Add(name, value);
+                _properties.Add(name, value);
                 return this;
             }
 
             public UnleashContext Build()
-                => new UnleashContext(_appName, _environment, _userId, _sessionId, _remoteAddress, _currentTime, _properties);
+                => new UnleashContext(_appName, _environment, _userId, _sessionId, _remoteAddress, _currentTime,
+                    _properties);
         }
     }
 }

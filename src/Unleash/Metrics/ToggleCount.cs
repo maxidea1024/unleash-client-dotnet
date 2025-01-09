@@ -5,29 +5,29 @@ namespace Unleash.Metrics
 {
     internal class ToggleCount
     {
-        private long yes;
-        private long no;
-        private ConcurrentDictionary<string, long> variants = new ConcurrentDictionary<string, long>();
+        private long _yes;
+        private long _no;
+        private ConcurrentDictionary<string, long> _variants = new ConcurrentDictionary<string, long>();
 
-        public long Yes => yes;
-        public long No => no;
-        public ConcurrentDictionary<string, long> Variants => variants;
+        public long Yes => _yes;
+        public long No => _no;
+        public ConcurrentDictionary<string, long> Variants => _variants;
 
         public void Register(bool active)
         {
             if (active)
             {
-                Interlocked.Increment(ref yes);
+                Interlocked.Increment(ref _yes);
             }
             else
             {
-                Interlocked.Increment(ref no);
+                Interlocked.Increment(ref _no);
             }
         }
 
         public void Register(string variantName)
         {
-            variants.AddOrUpdate(variantName, 1, (k, v) => v + 1);
+            _variants.AddOrUpdate(variantName, 1, (k, v) => v + 1);
         }
 
         /// <summary>
@@ -35,9 +35,9 @@ namespace Unleash.Metrics
         /// </summary>
         public void Reset()
         {
-            yes = 0;
-            no = 0;
-            variants = new ConcurrentDictionary<string, long>();
+            _yes = 0;
+            _no = 0;
+            _variants = new ConcurrentDictionary<string, long>();
         }
     }
 }

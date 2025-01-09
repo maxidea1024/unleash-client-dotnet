@@ -15,7 +15,8 @@ namespace Unleash.Internal
 
         public List<VariantDefinition> Variants { get; }
 
-        public ActivationStrategy(string name, Dictionary<string, string> parameters, List<Constraint> constraints = null, List<int> segments = null, List<VariantDefinition> variants = null)
+        public ActivationStrategy(string name, Dictionary<string, string>? parameters,
+            List<Constraint>? constraints = null, List<int>? segments = null, List<VariantDefinition>? variants = null)
         {
             Name = name;
             Parameters = parameters ?? new Dictionary<string, string>();

@@ -76,6 +76,7 @@ namespace Unleash.Internal
                 writer.Write(s);
                 writer.Flush();
             }
+
             stream.Position = 0;
             return stream;
         }

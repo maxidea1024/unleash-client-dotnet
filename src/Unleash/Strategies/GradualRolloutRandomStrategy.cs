@@ -23,7 +23,7 @@ namespace Unleash.Strategies
 
         public string Name => StrategyName;
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context = null)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext? context = null)
         {
             if (!parameters.TryGetValue(Percentage, out var value))
             {
@@ -36,7 +36,8 @@ namespace Unleash.Strategies
             return percentage >= randomNumber;
         }
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context,
+            IEnumerable<Constraint> constraints)
         {
             return StrategyUtils.IsEnabled(this, parameters, context, constraints);
         }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Unleash.Internal
+﻿namespace Unleash.Internal
 {
     public class Constraint
     {
@@ -18,7 +14,8 @@ namespace Unleash.Internal
 
         public bool Inverted { get; private set; }
 
-        public Constraint(string contextName, string @operator, bool caseInsensitive, bool inverted, string value, params string[] values)
+        public Constraint(string contextName, string @operator, bool caseInsensitive, bool inverted, string value,
+            params string[] values)
         {
             ContextName = contextName;
             Operator = @operator?.Trim();

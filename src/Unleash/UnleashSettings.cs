@@ -20,8 +20,8 @@ namespace Unleash
     {
         internal readonly Encoding Encoding = Encoding.UTF8;
 
-        internal readonly string FeatureToggleFilename = "unleash.toggles.json";
-        internal readonly string EtagFilename = "unleash.etag.txt";
+        private const string FEATURE_TOGGLE_FILENAME = "unleash.toggles.json";
+        private const string ETAG_FILENAME = "unleash.etag.txt";
 
         /// <summary>
         /// Gets the version of unleash client running.
@@ -86,7 +86,8 @@ namespace Unleash
         /// which will be included when communicating with the backend server.
         /// This provider will be called before each outgoing request to the unleash server.
         /// </summary>
-        public IUnleashCustomHttpHeaderProvider UnleashCustomHttpHeaderProvider { get; set; } = new DefaultCustomHttpHeaderProvider();
+        public IUnleashCustomHttpHeaderProvider UnleashCustomHttpHeaderProvider { get; set; } =
+            new DefaultCustomHttpHeaderProvider();
 
         /// <summary>
         /// Gets or sets the unleash context provider. This is needed when using any of the activation strategies 
@@ -126,7 +127,7 @@ namespace Unleash
         internal IFileSystem FileSystem { get; set; }
 
         /// <summary>
-        /// Gets or sets the toggle bootstrap provider (file, url, etc). Can be used for testing/mocking etc.
+        /// Gets or sets the toggle bootstrap provider (file, url, etc.). Can be used for testing/mocking etc.
         /// </summary>
         public IToggleBootstrapProvider ToggleBootstrapProvider { get; set; }
 
@@ -136,9 +137,9 @@ namespace Unleash
         public bool BootstrapOverride { get; set; } = true;
 
         /// <summary>
-        /// INTERNAL: Gets or sets if the feature toggle fetch should be immeditely scheduled. Used by the client factory to prevent redundant initial fetches.
+        /// INTERNAL: Gets or sets if the feature toggle fetch should be immediately scheduled. Used by the client factory to prevent redundant initial fetches.
         /// </summary>
-        internal bool ScheduleFeatureToggleFetchImmediatly { get; set; } = true;
+        internal bool ScheduleFeatureToggleFetchImmediately { get; set; } = true;
 
         internal bool ThrowOnInitialFetchFail { get; set; }
 
@@ -146,14 +147,12 @@ namespace Unleash
         {
             var assemblyName = Assembly.GetExecutingAssembly().GetName();
             var version = assemblyName.Version.ToString(3);
-
             return $"unleash-client-dotnet:v{version}";
         }
 
         private static string GetDefaultInstanceTag()
         {
             var hostName = Dns.GetHostName();
-
             return $"{hostName}-generated-{Guid.NewGuid()}";
         }
 
@@ -178,8 +177,8 @@ namespace Unleash
             sb.AppendLine($"Send metrics interval: {metricsInterval}");
 
             sb.AppendLine($"Local storage folder: {LocalStorageFolder()}");
-            sb.AppendLine($"Backup file: {FeatureToggleFilename}");
-            sb.AppendLine($"Etag file: {EtagFilename}");
+            sb.AppendLine($"Backup file: {FEATURE_TOGGLE_FILENAME}");
+            sb.AppendLine($"Etag file: {ETAG_FILENAME}");
 
             sb.AppendLine($"HttpClient Factory: {HttpClientFactory.GetType().Name}");
             sb.AppendLine($"Json serializer: {JsonSerializer.GetType().Name}");
@@ -194,13 +193,13 @@ namespace Unleash
         public string GetFeatureToggleFilePath()
         {
             var tempFolder = LocalStorageFolder();
-            return Path.Combine(tempFolder, PrependFileName(FeatureToggleFilename));
+            return Path.Combine(tempFolder, PrependFileName(FEATURE_TOGGLE_FILENAME));
         }
 
         public string GetFeatureToggleETagFilePath()
         {
             var tempFolder = LocalStorageFolder();
-            return Path.Combine(tempFolder, PrependFileName(EtagFilename));
+            return Path.Combine(tempFolder, PrependFileName(ETAG_FILENAME));
         }
 
         private string PrependFileName(string filename)
@@ -215,9 +214,11 @@ namespace Unleash
                 .ToArray());
         }
 
-        public void UseBootstrapUrlProvider(string path, bool shouldThrowOnError, Dictionary<string, string> customHeaders = null)
+        public void UseBootstrapUrlProvider(string path, bool shouldThrowOnError,
+            Dictionary<string, string> customHeaders = null)
         {
-            ToggleBootstrapProvider = new ToggleBootstrapUrlProvider(path, HttpClientFactory.Create(new Uri(path)), this, shouldThrowOnError, customHeaders);
+            ToggleBootstrapProvider = new ToggleBootstrapUrlProvider(path, HttpClientFactory.Create(new Uri(path)),
+                this, shouldThrowOnError, customHeaders);
         }
 
         public void UseBootstrapFileProvider(string path)

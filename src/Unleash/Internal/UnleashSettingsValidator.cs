@@ -1,8 +1,8 @@
 namespace Unleash.Internal
 {
-    internal class UnleashSettingsValidator
+    internal static class UnleashSettingsValidator
     {
-        public void Validate(UnleashSettings settings)
+        public static void Validate(UnleashSettings settings)
         {
             if (settings.UnleashApi == null)
             {
@@ -24,7 +24,8 @@ namespace Unleash.Internal
                 throw new UnleashException("You are required to specify an json serializer");
             }
 
-            settings.JsonSerializer = DynamicJsonLibraryChooser.CheckIfJsonSerializerCanBeInitialized(settings.JsonSerializer);
+            settings.JsonSerializer =
+                DynamicJsonLibraryChooser.CheckIfJsonSerializerCanBeInitialized(settings.JsonSerializer);
         }
     }
 }

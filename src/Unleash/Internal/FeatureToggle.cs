@@ -19,7 +19,9 @@ namespace Unleash.Internal
 
         public List<Dependency> Dependencies { get; }
 
-        public FeatureToggle(string name, string type, bool enabled, bool impressionData, List<ActivationStrategy>? strategies = null, List<VariantDefinition>? variants = null, List<Dependency>? dependencies = null)
+        public FeatureToggle(string name, string type, bool enabled, bool impressionData,
+            List<ActivationStrategy>? strategies = null, List<VariantDefinition>? variants = null,
+            List<Dependency>? dependencies = null)
         {
             Name = name;
             Type = type;
@@ -32,7 +34,8 @@ namespace Unleash.Internal
 
         public override string ToString()
         {
-            return $"FeatureToggle{{name=\'{Name}{'\''}, enabled={Enabled}, impressionData={ImpressionData}, strategies=\'{Strategies}{'\''}{'}'}";
+            return
+                $"FeatureToggle{{name=\'{Name}{'\''}, enabled={Enabled}, impressionData={ImpressionData}, strategies=\'{Strategies}{'\''}{'}'}";
         }
     }
 }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Unleash.Internal
+﻿namespace Unleash.Internal
 {
     // Compile time checking of constant strings.
     // Allows for invalid operators without crashing the application
-    public class Operator
+    public static class Operator
     {
         public const string IN = nameof(IN);
         public const string NOT_IN = nameof(NOT_IN);

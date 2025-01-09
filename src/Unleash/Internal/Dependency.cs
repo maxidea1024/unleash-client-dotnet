@@ -1,3 +1,5 @@
+using System;
+
 namespace Unleash.Internal
 {
     public class Dependency

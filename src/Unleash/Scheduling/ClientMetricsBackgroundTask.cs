@@ -12,36 +12,38 @@ namespace Unleash.Scheduling
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(ClientMetricsBackgroundTask));
 
-        private readonly IUnleashApiClient apiClient;
-        private readonly UnleashSettings settings;
-        private readonly ThreadSafeMetricsBucket metricsBucket;
+        private readonly IUnleashApiClient _apiClient;
+        private readonly UnleashSettings _settings;
+        private readonly ThreadSafeMetricsBucket _metricsBucket;
+
+        public string Name => "report-metrics-task";
+        public TimeSpan Interval { get; set; }
+        public bool ExecuteDuringStartup { get; set; }
 
         public ClientMetricsBackgroundTask(
-            IUnleashApiClient apiClient, 
+            IUnleashApiClient apiClient,
             UnleashSettings settings,
             ThreadSafeMetricsBucket metricsBucket)
         {
-            this.apiClient = apiClient;
-            this.settings = settings;
-            this.metricsBucket = metricsBucket;
+            _apiClient = apiClient;
+            _settings = settings;
+            _metricsBucket = metricsBucket;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            if (settings.SendMetricsInterval == null)
+            if (_settings.SendMetricsInterval == null)
+            {
                 return;
+            }
 
-            var result = await apiClient.SendMetrics(metricsBucket, cancellationToken).ConfigureAwait(false);
+            var result = await _apiClient.SendMetrics(_metricsBucket, cancellationToken).ConfigureAwait(false);
 
-            // Ignore return value    
+            // Ignore return value
             if (!result)
             {
                 // Logged elsewhere.
             }
         }
-
-        public string Name => "report-metrics-task";
-        public TimeSpan Interval { get; set; }
-        public bool ExecuteDuringStartup { get; set; }
     }
 }

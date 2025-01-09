@@ -25,6 +25,7 @@ namespace Unleash.Strategies
         /// <param name="context"></param>
         /// <param name="constraints"></param>
         /// <returns></returns>
-        bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints);
+        bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context,
+            IEnumerable<Constraint> constraints);
     }
 }

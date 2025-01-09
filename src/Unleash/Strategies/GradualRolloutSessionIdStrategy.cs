@@ -25,7 +25,7 @@ namespace Unleash.Strategies
         public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext? context = null)
         {
             var sessionId = context?.SessionId;
-            if (sessionId == null || sessionId == string.Empty)
+            if (string.IsNullOrEmpty(sessionId))
             {
                 return false;
             }
@@ -44,7 +44,8 @@ namespace Unleash.Strategies
             return percentage > 0 && normalizedSessionId <= percentage;
         }
 
-        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)
+        public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context,
+            IEnumerable<Constraint> constraints)
         {
             return StrategyUtils.IsEnabled(this, parameters, context, constraints);
         }

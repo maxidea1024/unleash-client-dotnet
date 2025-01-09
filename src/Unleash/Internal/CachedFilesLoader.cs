@@ -10,13 +10,13 @@ namespace Unleash.Internal
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(FetchFeatureTogglesTask));
 
-        private readonly IJsonSerializer jsonSerializer;
-        private readonly IFileSystem fileSystem;
-        private readonly IToggleBootstrapProvider toggleBootstrapProvider;
-        private readonly EventCallbackConfig eventConfig;
-        private readonly string toggleFile;
-        private readonly string etagFile;
-        private readonly bool bootstrapOverride;
+        private readonly IJsonSerializer _jsonSerializer;
+        private readonly IFileSystem _fileSystem;
+        private readonly IToggleBootstrapProvider _toggleBootstrapProvider;
+        private readonly EventCallbackConfig _eventConfig;
+        private readonly string _toggleFile;
+        private readonly string _etagFile;
+        private readonly bool _bootstrapOverride;
 
         public CachedFilesLoader(
             IJsonSerializer jsonSerializer,
@@ -27,73 +27,75 @@ namespace Unleash.Internal
             string etagFile,
             bool bootstrapOverride = true)
         {
-            this.jsonSerializer = jsonSerializer;
-            this.fileSystem = fileSystem;
-            this.toggleBootstrapProvider = toggleBootstrapProvider;
-            this.eventConfig = eventConfig;
-            this.toggleFile = toggleFile;
-            this.etagFile = etagFile;
-            this.bootstrapOverride = bootstrapOverride;
+            _jsonSerializer = jsonSerializer;
+            _fileSystem = fileSystem;
+            _toggleBootstrapProvider = toggleBootstrapProvider;
+            _eventConfig = eventConfig;
+            _toggleFile = toggleFile;
+            _etagFile = etagFile;
+            _bootstrapOverride = bootstrapOverride;
         }
 
         public CachedFilesResult EnsureExistsAndLoad()
         {
             var result = new CachedFilesResult();
 
-            if (!fileSystem.FileExists(etagFile))
+            if (!_fileSystem.FileExists(_etagFile))
             {
                 // Ensure files exists.
                 try
                 {
-                    fileSystem.WriteAllText(etagFile, string.Empty);
+                    _fileSystem.WriteAllText(_etagFile, string.Empty);
                     result.InitialETag = string.Empty;
                 }
                 catch (IOException ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Unhandled exception when writing to ETag file '{etagFile}'.", ex);
-                    eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
+                    Logger.Error(() => $"UNLEASH: Unhandled exception when writing to ETag file '{_etagFile}'.", ex);
+                    _eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }
             else
             {
                 try
                 {
-                    result.InitialETag = fileSystem.ReadAllText(etagFile);
+                    result.InitialETag = _fileSystem.ReadAllText(_etagFile);
                 }
                 catch (IOException ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Unhandled exception when reading from ETag file '{etagFile}'.", ex);
-                    eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
+                    Logger.Error(() => $"UNLEASH: Unhandled exception when reading from ETag file '{_etagFile}'.", ex);
+                    _eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }
 
             // Toggles
-            if (!fileSystem.FileExists(toggleFile))
+            if (!_fileSystem.FileExists(_toggleFile))
             {
                 try
                 {
-                    fileSystem.WriteAllText(toggleFile, string.Empty);
+                    _fileSystem.WriteAllText(_toggleFile, string.Empty);
                     result.InitialToggleCollection = null;
                 }
                 catch (IOException ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Unhandled exception when writing to toggle file '{toggleFile}'.", ex);
-                    eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
+                    Logger.Error(() => $"UNLEASH: Unhandled exception when writing to toggle file '{_toggleFile}'.",
+                        ex);
+                    _eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }
             else
             {
                 try
                 {
-                    using (var fileStream = fileSystem.FileOpenRead(toggleFile))
+                    using (var fileStream = _fileSystem.FileOpenRead(_toggleFile))
                     {
-                        result.InitialToggleCollection = jsonSerializer.Deserialize<ToggleCollection>(fileStream);
+                        result.InitialToggleCollection = _jsonSerializer.Deserialize<ToggleCollection>(fileStream);
                     }
                 }
                 catch (IOException ex)
                 {
-                    Logger.Error(() => $"UNLEASH: Unhandled exception when reading from toggle file '{toggleFile}'.", ex);
-                    eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
+                    Logger.Error(() => $"UNLEASH: Unhandled exception when reading from toggle file '{_toggleFile}'.",
+                        ex);
+                    _eventConfig?.RaiseError(new ErrorEvent() { Error = ex, ErrorType = ErrorType.FileCache });
                 }
             }
 
@@ -102,13 +104,16 @@ namespace Unleash.Internal
                 result.InitialETag = string.Empty;
             }
 
-            if ((result.InitialToggleCollection == null || result.InitialToggleCollection.Features?.Count == 0 || bootstrapOverride) && toggleBootstrapProvider != null)
+            if ((result.InitialToggleCollection != null && result.InitialToggleCollection.Features?.Count != 0 &&
+                 !_bootstrapOverride) || _toggleBootstrapProvider == null)
             {
-                var bootstrapCollection = toggleBootstrapProvider.Read();
-                if (bootstrapCollection != null && bootstrapCollection.Features?.Count > 0)
-                {
-                    result.InitialToggleCollection = bootstrapCollection;
-                }
+                return result;
+            }
+
+            var bootstrapCollection = _toggleBootstrapProvider.Read();
+            if (bootstrapCollection != null && bootstrapCollection.Features?.Count > 0)
+            {
+                result.InitialToggleCollection = bootstrapCollection;
             }
 
             return result;

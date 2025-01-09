@@ -25,7 +25,7 @@ namespace Unleash.Variants
             var target = StrategyUtils.GetNormalizedNumber(GetIdentifier(context, stickiness), groupId, VARIANT_NORMALIZATION_SEED, totalWeight);
 
             var counter = 0;
-            Variant result = null;
+            Variant? result = null;
             foreach (var variantDefinition in variantDefinitions)
             {
                 if (variantDefinition.Weight != 0)
@@ -55,14 +55,13 @@ namespace Unleash.Variants
             }
 
             return SelectVariant(feature.Name, context, feature.Variants) ?? defaultVariant;
-
         }
 
         private static Func<VariantOverride, bool> OverrideMatchesContext(UnleashContext context)
         {
             return (variantOverride) =>
             {
-                string contextValue = null;
+                string? contextValue = null;
                 switch (variantOverride.ContextName)
                 {
                     case "userId":

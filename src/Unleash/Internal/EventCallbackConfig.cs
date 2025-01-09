@@ -13,18 +13,12 @@ namespace Unleash.Internal
 
         public void RaiseError(ErrorEvent evt)
         {
-            if (ErrorEvent != null)
-            {
-                ErrorEvent(evt);
-            }
+            ErrorEvent?.Invoke(evt);
         }
 
         public void RaiseTogglesUpdated(TogglesUpdatedEvent evt)
         {
-            if (TogglesUpdatedEvent != null)
-            {
-                TogglesUpdatedEvent(evt);
-            }
+            TogglesUpdatedEvent?.Invoke(evt);
         }
     }
 }

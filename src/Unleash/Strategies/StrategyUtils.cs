@@ -17,6 +17,7 @@ namespace Unleash.Strategies
             const int one = 1;
             const string separator = ":";
 
+            // TODO remove GC
             byte[] bytes = Encoding.UTF8.GetBytes(string.Concat(groupId, separator, identifier));
 
             using (var algorithm = MurmurHash.Create32(randomSeed))
@@ -45,6 +46,7 @@ namespace Unleash.Strategies
             {
                 return 100;
             }
+
             if (p < 0)
             {
                 return 0;
@@ -53,7 +55,8 @@ namespace Unleash.Strategies
             return p;
         }
 
-        public static bool IsEnabled(IStrategy strategy, Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)
+        public static bool IsEnabled(IStrategy strategy, Dictionary<string, string> parameters, UnleashContext context,
+            IEnumerable<Constraint> constraints)
         {
             return ConstraintUtils.Validate(constraints, context) && strategy.IsEnabled(parameters, context);
         }

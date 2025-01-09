@@ -7,25 +7,25 @@ namespace Unleash.Metrics
     /// <inheritdoc />
     /// <summary>
     /// Provides synchronization that supports multiple registration counters and single 'writer' (transfer to server)
-    /// 
+    ///
     /// While in write mode, no registrations will occur. i.e: no lock for rest of system.
     /// </summary>
     internal class ThreadSafeMetricsBucket : IDisposable
     {
-        private long missedRegistrations;
-        public long MissedRegistrations => missedRegistrations;
+        private long _missedRegistrations;
+        public long MissedRegistrations => _missedRegistrations;
 
-        private readonly MetricsBucket metricsBucket;
+        private readonly MetricsBucket _metricsBucket;
 
-        private readonly ReaderWriterLockSlim @lock = 
+        private readonly ReaderWriterLockSlim _lock =
             new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
         public ThreadSafeMetricsBucket(MetricsBucket metricsBucket = null)
         {
-            this.metricsBucket = metricsBucket ?? new MetricsBucket();
+            _metricsBucket = metricsBucket ?? new MetricsBucket();
 
-            this.metricsBucket.Toggles = new ConcurrentDictionary<string, ToggleCount>();
-            this.metricsBucket.Start = DateTimeOffset.UtcNow;
+            _metricsBucket.Toggles = new ConcurrentDictionary<string, ToggleCount>();
+            _metricsBucket.Start = DateTimeOffset.UtcNow;
         }
 
         /// <summary>
@@ -45,23 +45,22 @@ namespace Unleash.Metrics
 
         private void WithToggleCount(string toggleName, Action<ToggleCount> action)
         {
-            if (@lock.TryEnterReadLock(2))
+            if (_lock.TryEnterReadLock(2))
             {
                 try
                 {
-                    var toggle = metricsBucket.Toggles.GetOrAdd(toggleName, x => new ToggleCount());
+                    var toggle = _metricsBucket.Toggles.GetOrAdd(toggleName, x => new ToggleCount());
                     action(toggle);
-
                 }
                 finally
                 {
-                    @lock.ExitReadLock();
+                    _lock.ExitReadLock();
                 }
             }
             else
             {
                 // Ignore
-                Interlocked.Increment(ref missedRegistrations);
+                Interlocked.Increment(ref _missedRegistrations);
             }
         }
 
@@ -70,9 +69,9 @@ namespace Unleash.Metrics
         /// </summary>
         public IDisposable StopCollectingMetrics(out MetricsBucket bucket)
         {
-            @lock.EnterWriteLock();
-            
-            bucket = metricsBucket;
+            _lock.EnterWriteLock();
+
+            bucket = _metricsBucket;
             bucket.Stop = DateTimeOffset.UtcNow;
 
             return this;
@@ -85,22 +84,23 @@ namespace Unleash.Metrics
         void IDisposable.Dispose()
         {
             ResetCounters();
-            @lock.ExitWriteLock();
+            _lock.ExitWriteLock();
         }
 
         private void ResetCounters()
         {
-            metricsBucket.Start = DateTimeOffset.UtcNow;
+            _metricsBucket.Start = DateTimeOffset.UtcNow;
 
-            foreach (var item in metricsBucket.Toggles)
+            foreach (var item in _metricsBucket.Toggles)
+            {
                 item.Value.Reset();
+            }
         }
     }
 
     internal class MetricsBucket
     {
         public ConcurrentDictionary<string, ToggleCount> Toggles { get; set; }
-
         public DateTimeOffset Start { get; set; }
         public DateTimeOffset Stop { get; set; }
     }

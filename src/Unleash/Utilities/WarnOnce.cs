@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unleash.Logging;
 
 namespace Unleash.Utilities
@@ -16,12 +15,11 @@ namespace Unleash.Utilities
 
         public void Warn(string key, string message)
         {
-            if (_seen.Contains(key))
+            if (!_seen.Add(key))
             {
                 return;
             }
 
-            _seen.Add(key);
             _logger.Warn(() => message);
         }
     }

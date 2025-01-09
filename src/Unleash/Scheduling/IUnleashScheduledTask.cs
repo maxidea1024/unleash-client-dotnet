@@ -10,13 +10,6 @@ namespace Unleash.Scheduling
     public interface IUnleashScheduledTask
     {
         /// <summary>
-        /// Executes the task
-        /// </summary>
-        /// <param name="cancellationToken">Cancellation token passed into the task.</param>
-        /// <returns></returns>
-        Task ExecuteAsync(CancellationToken cancellationToken);
-
-        /// <summary>
         /// Gets the name of the task
         /// </summary>
         string Name { get; }
@@ -30,5 +23,12 @@ namespace Unleash.Scheduling
         /// Gets a flag indicating that the task should run during startup.
         /// </summary>
         bool ExecuteDuringStartup { get; }
+
+        /// <summary>
+        /// Executes the task
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token passed into the task.</param>
+        /// <returns></returns>
+        Task ExecuteAsync(CancellationToken cancellationToken);
     }
 }

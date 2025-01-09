@@ -15,7 +15,7 @@ namespace Unleash.Scheduling
     {
         private static readonly ILog Logger = LogProvider.GetLogger(typeof(SystemTimerScheduledTaskManager));
 
-        private readonly Dictionary<string, Timer> timers = new Dictionary<string, Timer>();
+        private readonly Dictionary<string, Timer> _timers = new Dictionary<string, Timer>();
 
         public void Configure(IEnumerable<IUnleashScheduledTask> tasks, CancellationToken cancellationToken)
         {
@@ -28,39 +28,6 @@ namespace Unleash.Scheduling
         private void ConfigureTask(IUnleashScheduledTask task, CancellationToken cancellationToken)
         {
             var name = task.Name;
-
-            async void Callback(object state)
-            {
-                try
-                {
-                    if (!cancellationToken.IsCancellationRequested)
-                    {
-                        await task.ExecuteAsync(cancellationToken);
-                    }
-                }
-                catch (TaskCanceledException taskCanceledException)
-                {
-                    if (!cancellationToken.IsCancellationRequested)
-                    {
-                        Logger.Warn(() => $"UNLEASH: Task '{name}' cancelled ...", taskCanceledException);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn(() => $"UNLEASH: Unhandled exception from background task '{name}'.", ex);
-                }
-                finally
-                {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        // Stop the timer.
-                        if (timers.ContainsKey(name))
-                        {
-                            timers[name].SafeTimerChange(Timeout.Infinite, Timeout.Infinite, ref disposeEnded);
-                        }
-                    }
-                }
-            }
 
             var dueTime = task.ExecuteDuringStartup
                 ? TimeSpan.Zero
@@ -77,37 +44,71 @@ namespace Unleash.Scheduling
                 dueTime: Timeout.Infinite,
                 period: Timeout.Infinite);
 
-            timers.Add(name, timer);
+            _timers.Add(name, timer);
 
             // Now it's ok to start the timer.
-            timer.SafeTimerChange(dueTime, period, ref disposeEnded);
+            timer.SafeTimerChange(dueTime, period, ref _disposeEnded);
+
+            async void Callback(object state)
+            {
+                try
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        await task.ExecuteAsync(cancellationToken);
+                    }
+                }
+                catch (TaskCanceledException taskCanceledException)
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        Logger.Warn(() => $"GANPA: Task '{name}' cancelled ...", taskCanceledException);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(() => $"GANPA: Unhandled exception from background task '{name}'.", ex);
+                }
+                finally
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        // Stop the timer.
+                        if (_timers.TryGetValue(name, out var timer1))
+                        {
+                            timer1.SafeTimerChange(Timeout.Infinite, Timeout.Infinite, ref _disposeEnded);
+                        }
+                    }
+                }
+            }
         }
 
-        private bool disposeEnded;
+        private bool _disposeEnded;
+
         public void Dispose()
         {
-            if (disposeEnded)
+            if (_disposeEnded)
+            {
                 return;
+            }
 
             var timeout = TimeSpan.FromSeconds(1);
 
             using (var waitHandle = new ManualResetEvent(false))
             {
-                foreach (var task in timers)
+                foreach (var task in _timers)
                 {
                     // Returns false on second dispose
-                    if (task.Value.Dispose(waitHandle))
+                    if (!task.Value.Dispose(waitHandle)) continue;
+                    if (!waitHandle.WaitOne(timeout))
                     {
-                        if (!waitHandle.WaitOne(timeout))
-                        {
-                            throw new TimeoutException($"UNLEASH: Timeout waiting for task '{task.Key}' to stop..");
-                        }
+                        throw new TimeoutException($"UNLEASH: Timeout waiting for task '{task.Key}' to stop..");
                     }
                 }
             }
 
-            disposeEnded = true;
-            timers.Clear();
+            _disposeEnded = true;
+            _timers.Clear();
         }
     }
 }

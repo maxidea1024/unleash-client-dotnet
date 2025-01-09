@@ -9,7 +9,8 @@ namespace Unleash.Utilities
     {
         public HttpStatusCode StatusCode { get; set; }
 
-        public FetchingToggleBootstrapUrlFailedException(string errorMessage, HttpStatusCode statusCode) : base(errorMessage)
+        public FetchingToggleBootstrapUrlFailedException(string errorMessage, HttpStatusCode statusCode) : base(
+            errorMessage)
         {
             StatusCode = statusCode;
         }

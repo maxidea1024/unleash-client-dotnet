@@ -13,10 +13,10 @@ namespace Unleash
 {
     internal class UnleashServices : IDisposable
     {
+        private const string SUPPORTED_SPEC_VERSION = "4.5.1";
+
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly IUnleashScheduledTaskManager _scheduledTaskManager;
-
-        const string supportedSpecVersion = "4.5.1";
 
         internal CancellationToken CancellationToken { get; }
         internal IUnleashContextProvider ContextProvider { get; }
@@ -25,7 +25,8 @@ namespace Unleash
         internal ThreadSafeMetricsBucket MetricsBucket { get; }
         internal FetchFeatureTogglesTask FetchFeatureTogglesTask { get; }
 
-        public UnleashServices(UnleashSettings settings, EventCallbackConfig eventConfig, Dictionary<string, IStrategy> strategyMap)
+        public UnleashServices(UnleashSettings settings, EventCallbackConfig eventConfig,
+            Dictionary<string, IStrategy> strategyMap)
         {
             if (settings.FileSystem == null)
             {
@@ -39,7 +40,8 @@ namespace Unleash
             CancellationToken = _cancellationTokenSource.Token;
             ContextProvider = settings.UnleashContextProvider;
 
-            var loader = new CachedFilesLoader(settings.JsonSerializer, settings.FileSystem, settings.ToggleBootstrapProvider, eventConfig, backupFile, etagBackupFile, settings.BootstrapOverride);
+            var loader = new CachedFilesLoader(settings.JsonSerializer, settings.FileSystem,
+                settings.ToggleBootstrapProvider, eventConfig, backupFile, etagBackupFile, settings.BootstrapOverride);
             var cachedFilesResult = loader.EnsureExistsAndLoad();
 
             ToggleCollection = new ThreadSafeToggleCollection
@@ -52,21 +54,22 @@ namespace Unleash
             IUnleashApiClient apiClient;
             if (settings.UnleashApiClient == null)
             {
-                var uri = settings.UnleashApi;
+                var uri = settings.UnleashApi ?? throw new ArgumentNullException("settings.UnleashApi");
                 if (!uri.AbsolutePath.EndsWith("/"))
                 {
                     uri = new Uri($"{uri.AbsoluteUri}/");
                 }
 
                 var httpClient = settings.HttpClientFactory.Create(uri);
-                apiClient = new UnleashApiClient(httpClient, settings.JsonSerializer, new UnleashApiClientRequestHeaders()
-                {
-                    AppName = settings.AppName,
-                    InstanceTag = settings.InstanceTag,
-                    CustomHttpHeaders = settings.CustomHttpHeaders,
-                    CustomHttpHeaderProvider = settings.UnleashCustomHttpHeaderProvider,
-                    SupportedSpecVersion = supportedSpecVersion
-                }, eventConfig, settings.ProjectId);
+                apiClient = new UnleashApiClient(httpClient, settings.JsonSerializer,
+                    new UnleashApiClientRequestHeaders()
+                    {
+                        AppName = settings.AppName,
+                        InstanceTag = settings.InstanceTag,
+                        CustomHttpHeaders = settings.CustomHttpHeaders,
+                        CustomHttpHeaderProvider = settings.UnleashCustomHttpHeaderProvider,
+                        SupportedSpecVersion = SUPPORTED_SPEC_VERSION
+                    }, eventConfig, settings.ProjectId);
             }
             else
             {
@@ -88,13 +91,14 @@ namespace Unleash
                 etagBackupFile,
                 settings.ThrowOnInitialFetchFail)
             {
-                ExecuteDuringStartup = settings.ScheduleFeatureToggleFetchImmediatly,
+                ExecuteDuringStartup = settings.ScheduleFeatureToggleFetchImmediately,
                 Interval = settings.FetchTogglesInterval,
                 Etag = cachedFilesResult.InitialETag
             };
             FetchFeatureTogglesTask = fetchFeatureTogglesTask;
 
-            var scheduledTasks = new List<IUnleashScheduledTask>(){
+            var scheduledTasks = new List<IUnleashScheduledTask>()
+            {
                 fetchFeatureTogglesTask
             };
 

@@ -28,13 +28,14 @@ namespace Unleash
         /// <summary>
         /// Default: empty dictionary
         /// </summary>
-        private static readonly ConcurrentDictionary<string, HttpClient> _httpClientCache = new ConcurrentDictionary<string, HttpClient>();
+        private static readonly ConcurrentDictionary<string, HttpClient> s_httpClientCache =
+            new ConcurrentDictionary<string, HttpClient>();
 
         public HttpClient Create(Uri unleashApiUri)
         {
             var key = $"{unleashApiUri.Scheme}://{unleashApiUri.DnsSafeHost}:{unleashApiUri.Port}";
 
-            return _httpClientCache.GetOrAdd(key, k =>
+            return s_httpClientCache.GetOrAdd(key, k =>
             {
                 var client = CreateHttpClientInstance(unleashApiUri);
                 // Refresh DNS cache each 60 seconds
@@ -74,12 +75,14 @@ namespace Unleash
             headers.TryAddWithoutValidation("Accept", "application/json");
             headers.TryAddWithoutValidation("Content-Type", "application/json");
 
-            if (CustomDefaultHttpHeaders != null)
+            if (CustomDefaultHttpHeaders == null)
             {
-                foreach (var httpHeader in CustomDefaultHttpHeaders)
-                {
-                    headers.TryAddWithoutValidation(httpHeader.Key, httpHeader.Value);
-                }
+                return;
+            }
+            
+            foreach (var httpHeader in CustomDefaultHttpHeaders)
+            {
+                headers.TryAddWithoutValidation(httpHeader.Key, httpHeader.Value);
             }
         }
     }

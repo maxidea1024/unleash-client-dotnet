@@ -1,8 +1,4 @@
 ﻿using NuGet.Versioning;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Unleash.Internal;
 using Unleash.Logging;
 
@@ -15,41 +11,32 @@ namespace Unleash.Strategies.Constraints
         public bool Evaluate(Constraint constraint, UnleashContext context)
         {
             var contextValue = context.GetByName(constraint.ContextName);
-            SemanticVersion contextSemver;
-            if (!SemanticVersion.TryParse(contextValue, out contextSemver))
+            if (!SemanticVersion.TryParse(contextValue, out var contextSemver))
             {
                 Logger.Info(() => $"Couldn't parse version {contextValue} from context");
                 return false;
             }
 
-            if (!string.IsNullOrWhiteSpace(constraint.Value))
+            if (string.IsNullOrWhiteSpace(constraint.Value)) return false;
+            if (!SemanticVersion.TryParse(constraint.Value, out var constraintSemver))
             {
-                SemanticVersion constraintSemver;
-                if (!SemanticVersion.TryParse(constraint.Value, out constraintSemver))
-                    return false;
-
-                if (constraint.Inverted)
-                    return !Eval(constraint.Operator, contextSemver, constraintSemver);
-
-                return Eval(constraint.Operator, contextSemver, constraintSemver);
+                return false;
             }
 
-            return false;
+            var result = Eval(constraint.Operator, contextSemver, constraintSemver);
+            return !constraint.Inverted ? result : !result;
         }
 
-        private bool Eval(string @operator, SemanticVersion contextSemver, SemanticVersion constraintSemver)
+        private static bool Eval(string @operator, SemanticVersion contextSemver, SemanticVersion constraintSemver)
         {
             switch (@operator)
             {
                 case Operator.SEMVER_GT:
                     return contextSemver > constraintSemver;
-
                 case Operator.SEMVER_EQ:
                     return contextSemver == constraintSemver;
-
                 case Operator.SEMVER_LT:
                     return contextSemver < constraintSemver;
-
                 default:
                     return false;
             }

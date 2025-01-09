@@ -5,11 +5,11 @@ namespace Unleash.Internal
 {
     internal class FileSystem : IFileSystem
     {
-        private readonly Encoding encoding;
+        private readonly Encoding _encoding;
 
         public FileSystem(Encoding encoding)
         {
-            this.encoding = encoding;
+            _encoding = encoding;
         }
 
         public bool FileExists(string path)
@@ -29,12 +29,12 @@ namespace Unleash.Internal
 
         public void WriteAllText(string path, string content)
         {
-            File.WriteAllText(path, content, encoding);
+            File.WriteAllText(path, content, _encoding);
         }
 
         public string ReadAllText(string path)
         {
-            return File.ReadAllText(path, encoding);
+            return File.ReadAllText(path, _encoding);
         }
     }
 }

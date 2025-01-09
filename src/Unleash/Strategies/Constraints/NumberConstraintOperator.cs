@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using Unleash.Internal;
 
 namespace Unleash.Strategies.Constraints
@@ -13,26 +10,34 @@ namespace Unleash.Strategies.Constraints
         {
             var contextValueString = context.GetByName(constraint.ContextName);
             if (string.IsNullOrWhiteSpace(contextValueString))
+            {
                 return false;
+            }
 
-            if (!double.TryParse(contextValueString, NumberStyles.Number, CultureInfo.InvariantCulture, out var contextNumber))
+            if (!double.TryParse(contextValueString, NumberStyles.Number, CultureInfo.InvariantCulture,
+                    out var contextNumber))
+            {
                 return false;
+            }
 
-            if (string.IsNullOrWhiteSpace(constraint.Value) || !double.TryParse(constraint.Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var constraintNumber))
+            if (string.IsNullOrWhiteSpace(constraint.Value) || !double.TryParse(constraint.Value, NumberStyles.Number,
+                    CultureInfo.InvariantCulture, out var constraintNumber))
+            {
                 return false;
+            }
 
-            if (constraint.Inverted)
-                return !Eval(constraint.Operator, constraintNumber, contextNumber);
-
-            return Eval(constraint.Operator, constraintNumber, contextNumber);
+            var result = Eval(constraint.Operator, constraintNumber, contextNumber);
+            return !constraint.Inverted ? result : !result;
         }
 
-        private bool Eval(string @operator, double constraintNumber, double contextNumber)
+        private static bool Eval(string @operator, double constraintNumber, double contextNumber)
         {
+            const double tolerance = 1e6;
+
             switch (@operator)
             {
                 case Operator.NUM_EQ:
-                    return contextNumber == constraintNumber;
+                    return Math.Abs(contextNumber - constraintNumber) < tolerance;
                 case Operator.NUM_GT:
                     return contextNumber > constraintNumber;
                 case Operator.NUM_GTE:

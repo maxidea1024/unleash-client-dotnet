@@ -18,14 +18,14 @@ namespace Unleash.Serialization
             {
                 new ActivationStrategy("remoteAddress", new Dictionary<string, string>()
                 {
-                    {"IPs", "127.0.0.1"}
+                    { "IPs", "127.0.0.1" }
                 })
             }),
             new FeatureToggle("feature2", "release", false, false, new List<ActivationStrategy>()
             {
                 new ActivationStrategy("userWithId", new Dictionary<string, string>()
                 {
-                    {"userIds", "james"}
+                    { "userIds", "james" }
                 })
             })
         });
@@ -110,5 +110,5 @@ namespace Unleash.Serialization
                     throw new UnleashException($"Wrong expected strategy parameters value (127.0.0.1): {errorMessage}");
             }
         }
-   }
+    }
 }
