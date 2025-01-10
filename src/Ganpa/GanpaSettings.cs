@@ -169,7 +169,7 @@ namespace Ganpa
             sb.AppendLine($"Environment: {Environment}");
             sb.AppendLine($"Instance tag: {InstanceTag}");
             sb.AppendLine($"Project Id: {ProjectId}");
-            sb.AppendLine($"Server Uri: {UnleashApi}");
+            sb.AppendLine($"Server Uri: {GanpaApiUri}");
             sb.AppendLine($"Sdk version: {SdkVersion}");
 
             sb.AppendLine($"Fetch toggles interval: {FetchTogglesInterval.TotalSeconds} seconds");

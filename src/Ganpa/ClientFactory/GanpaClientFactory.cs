@@ -29,7 +29,9 @@ namespace Ganpa.ClientFactory
 
             settings.ScheduleFeatureToggleFetchImmediately = false;
             settings.ThrowOnInitialFetchFail = true;
+
             var ganpa = new DefaultGanpa(settings, strategies);
+            
             TaskFactory
                 .StartNew(() => ganpa.Services.FetchFeatureTogglesTask.ExecuteAsync(CancellationToken.None))
                 .Unwrap()
@@ -38,7 +40,6 @@ namespace Ganpa.ClientFactory
 
             return ganpa;
         }
-
 
         /// <summary>
         /// Initializes a new instance of Ganpa client. 
@@ -56,9 +57,12 @@ namespace Ganpa.ClientFactory
 
             settings.ScheduleFeatureToggleFetchImmediately = false;
             settings.ThrowOnInitialFetchFail = true;
+            
             var ganpa = new DefaultGanpa(settings, strategies);
+            
             await ganpa.Services.FetchFeatureTogglesTask.ExecuteAsync(CancellationToken.None)
                 .ConfigureAwait(false);
+            
             return ganpa;
         }
     }

@@ -9,7 +9,7 @@ namespace Ganpa.Strategies
     public interface IStrategy
     {
         /// <summary>
-        /// Gets the stragegy name 
+        /// Gets the strategy name 
         /// </summary>
         string Name { get; }
 

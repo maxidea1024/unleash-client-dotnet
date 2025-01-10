@@ -31,15 +31,15 @@ namespace Ganpa
         private static readonly ConcurrentDictionary<string, HttpClient> s_httpClientCache =
             new ConcurrentDictionary<string, HttpClient>();
 
-        public HttpClient Create(Uri unleashApiUri)
+        public HttpClient Create(Uri ganpaApiUri)
         {
-            var key = $"{unleashApiUri.Scheme}://{unleashApiUri.DnsSafeHost}:{unleashApiUri.Port}";
+            var key = $"{ganpaApiUri.Scheme}://{ganpaApiUri.DnsSafeHost}:{ganpaApiUri.Port}";
 
             return s_httpClientCache.GetOrAdd(key, k =>
             {
-                var client = CreateHttpClientInstance(unleashApiUri);
+                var client = CreateHttpClientInstance(ganpaApiUri);
                 // Refresh DNS cache each 60 seconds
-                var servicePoint = ServicePointManager.FindServicePoint(unleashApiUri);
+                var servicePoint = ServicePointManager.FindServicePoint(ganpaApiUri);
                 ConfigureServicePoint(servicePoint);
                 ConfigureHttpClient(client);
                 ConfigureDefaultRequestHeaders(client.DefaultRequestHeaders);
@@ -48,11 +48,11 @@ namespace Ganpa
             });
         }
 
-        protected virtual HttpClient CreateHttpClientInstance(Uri unleashApiUri)
+        protected virtual HttpClient CreateHttpClientInstance(Uri ganpaApiUri)
         {
             var client = new HttpClient
             {
-                BaseAddress = unleashApiUri,
+                BaseAddress = ganpaApiUri,
                 Timeout = Timeout
             };
 

@@ -126,7 +126,7 @@ namespace Ganpa.Communication
 
             if (shouldThrow)
             {
-                throw new GanpaException($"Ganpa: {response.StatusCode} from server in '{nameof(FetchToggles)}': " +
+                throw new GanpaException($"GANPA: {response.StatusCode} from server in '{nameof(FetchToggles)}': " +
                                            error);
             }
 
@@ -141,7 +141,7 @@ namespace Ganpa.Communication
         {
             _featureRequestsToSkip = Math.Min(10, _featureRequestsToSkip + 1);
             Logger.Warn(() =>
-                $"UNLEASH: Backing off due to {response.StatusCode} from server in '{nameof(FetchToggles)}'.");
+                $"GANPA: Backing off due to {response.StatusCode} from server in '{nameof(FetchToggles)}'.");
         }
 
         private void ConfigurationError(HttpResponseMessage response, string requestUri)
@@ -152,16 +152,16 @@ namespace Ganpa.Communication
             {
                 case HttpStatusCode.NotFound:
                     Logger.Error(() =>
-                        $"UNLEASH: Error when fetching toggles, {requestUri} responded NOT_FOUND (404) which means your API url most likely needs correction.'.");
+                        $"GANPA: Error when fetching toggles, {requestUri} responded NOT_FOUND (404) which means your API url most likely needs correction.'.");
                     break;
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.Forbidden:
                     Logger.Error(() =>
-                        $"UNLEASH: Error when fetching toggles, {requestUri} responded FORBIDDEN (403) which means your API token is not valid.");
+                        $"GANPA: Error when fetching toggles, {requestUri} responded FORBIDDEN (403) which means your API token is not valid.");
                     break;
                 default:
                     Logger.Error(() =>
-                        $"UNLEASH: Configuration error due to {response.StatusCode} from server in '{nameof(FetchToggles)}'.");
+                        $"GANPA: Configuration error due to {response.StatusCode} from server in '{nameof(FetchToggles)}'.");
                     break;
             }
         }
@@ -226,7 +226,7 @@ namespace Ganpa.Communication
 
                     var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     Logger.Trace(() =>
-                        $"UNLEASH: Error {response.StatusCode} from request '{requestUri}' in '{nameof(GanpaApiClient)}': " +
+                        $"GANPA: Error {response.StatusCode} from request '{requestUri}' in '{nameof(GanpaApiClient)}': " +
                         error);
                     _eventConfig?.RaiseError(new ErrorEvent()
                         { Resource = requestUri, ErrorType = ErrorType.Client, StatusCode = response.StatusCode });
@@ -297,7 +297,7 @@ namespace Ganpa.Communication
 
             var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             Logger.Trace(() =>
-                $"UNLEASH: Error {response.StatusCode} from request '{requestUri}' in '{nameof(GanpaApiClient)}': " +
+                $"GANPA: Error {response.StatusCode} from request '{requestUri}' in '{nameof(GanpaApiClient)}': " +
                 error);
             _eventConfig?.RaiseError(new ErrorEvent()
                 { Resource = requestUri, ErrorType = ErrorType.Client, StatusCode = response.StatusCode });
@@ -315,7 +315,7 @@ namespace Ganpa.Communication
             const string userAgentHeader = "User-Agent";
             const string instanceIdHeader = "UNLEASH-INSTANCEID";
 
-            const string supportedSpecVersionHeader = "Ganpa-Client-Spec";
+            const string supportedSpecVersionHeader = "Unleash-Client-Spec";
 
             requestMessage.Headers.TryAddWithoutValidation(appNameHeader, headers.AppName);
             requestMessage.Headers.TryAddWithoutValidation(userAgentHeader, headers.AppName);
