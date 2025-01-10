@@ -17,7 +17,7 @@ namespace Unleash.Tests.Variants
         {
             // Arrange
             var toggle = new FeatureToggle("test.variants", "release", true, false, new List<ActivationStrategy> { defaultStrategy });
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "userA",
                 SessionId = "sessionId",
@@ -48,7 +48,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { v1, v2, v3 });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "11",
                 SessionId = "sessionId",
@@ -81,7 +81,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { v1, v2, v3 });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "15",
                 SessionId = "sessionId",
@@ -112,7 +112,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { v1, v2, v3 });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "43",
                 SessionId = "sessionId",
@@ -144,7 +144,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { v1, v2, v3 });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "123",
                 SessionId = "sessionId",
@@ -176,7 +176,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { v1, v2, v3 });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "userId",
                 SessionId = "sessionId",
@@ -210,7 +210,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { v1, v2, v3 });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "11",
                 SessionId = "sessionId",
@@ -245,7 +245,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { v1, v2, v3 });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "11",
                 SessionId = sessionId,
@@ -279,7 +279,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { blue, red, green, yellow });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "11",
                 SessionId = sessionId,
@@ -313,7 +313,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { blue, red, green, yellow });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "13",
                 SessionId = sessionId,
@@ -347,7 +347,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { blue, red, green, yellow });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "13",
                 SessionId = sessionId,
@@ -381,7 +381,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { blue, red, green, yellow });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "13",
                 SessionId = sessionId,
@@ -415,7 +415,7 @@ namespace Unleash.Tests.Variants
                     new List<ActivationStrategy> { defaultStrategy },
                     new List<VariantDefinition> { blue, red, green, yellow });
 
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "13",
                 SessionId = sessionId,

@@ -48,7 +48,7 @@ namespace Unleash.Tests.Strategy
         [Test]
         public void should_be_disabled_when_missing_user_id()
         {
-            var context = UnleashContext.New().Build();
+            var context = GanpaContext.New().Build();
             var gradualRolloutStrategy = new GradualRolloutSessionIdStrategy();
 
             gradualRolloutStrategy.IsEnabled(new Dictionary<string, string>(), context).Should().BeFalse();
@@ -57,7 +57,7 @@ namespace Unleash.Tests.Strategy
         [Test]
         public void should_have_same_result_for_multiple_executions()
         {
-            var context = UnleashContext.New().SessionId("1574576830").Build();
+            var context = GanpaContext.New().SessionId("1574576830").Build();
             var gradualRolloutStrategy = new GradualRolloutSessionIdStrategy();
 
             var parameters = buildParams(1, "innfinn");
@@ -73,7 +73,7 @@ namespace Unleash.Tests.Strategy
         [Test]
         public void should_be_enabled_when_using_100percent_rollout()
         {
-            var context = UnleashContext.New().SessionId("1574576830").Build();
+            var context = GanpaContext.New().SessionId("1574576830").Build();
             var gradualRolloutStrategy = new GradualRolloutSessionIdStrategy();
 
             var parameters = buildParams(100, "innfinn");
@@ -86,7 +86,7 @@ namespace Unleash.Tests.Strategy
         [Test]
         public void should_not_be_enabled_when_0percent_rollout()
         {
-            var context = UnleashContext.New().SessionId("1574576830").Build();
+            var context = GanpaContext.New().SessionId("1574576830").Build();
             var gradualRolloutStrategy = new GradualRolloutSessionIdStrategy();
 
             var parameters = buildParams(0, "innfinn");
@@ -102,7 +102,7 @@ namespace Unleash.Tests.Strategy
             string groupId = "";
             int minimumPercentage = StrategyUtils.GetNormalizedNumber(sessionId, groupId, 0);
 
-            var context = UnleashContext.New().SessionId(sessionId).Build();
+            var context = GanpaContext.New().SessionId(sessionId).Build();
 
             var gradualRolloutStrategy = new GradualRolloutSessionIdStrategy();
 
@@ -133,7 +133,7 @@ namespace Unleash.Tests.Strategy
             for (int i = 0; i < numberOfIDs; i++)
             {
                 var sessionId = getRandomLoginId();
-                var context = UnleashContext.New().SessionId(sessionId.ToString()).Build();
+                var context = GanpaContext.New().SessionId(sessionId.ToString()).Build();
 
                 var gradualRolloutStrategy = new GradualRolloutSessionIdStrategy();
 

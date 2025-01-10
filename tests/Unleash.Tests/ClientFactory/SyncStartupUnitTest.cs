@@ -16,24 +16,24 @@ namespace Unleash.Tests.ClientFactory
 {
     public class SyncStartupUnitTest
     {
-        private IUnleashApiClient mockApiClient { get; set; }
-        private UnleashSettings settings { get; set; }
-        private IUnleashClientFactory unleashFactory { get; set; }
+        private IGanpaApiClient mockApiClient { get; set; }
+        private GanpaSettings settings { get; set; }
+        private IGanpaClientFactory GanpaFactory { get; set; }
 
         [SetUp]
         public void Setup()
         {
-            mockApiClient = A.Fake<IUnleashApiClient>();
-            settings = new MockedUnleashSettings(instanceTag: "test instance SyncStartupUnitTest");
-            unleashFactory = new UnleashClientFactory();
+            mockApiClient = A.Fake<IGanpaApiClient>();
+            settings = new MockedGanpaSettings(instanceTag: "test instance SyncStartupUnitTest");
+            GanpaFactory = new GanpaClientFactory();
         }
 
         [Test(Description = "Immediate initialization: Should only fetch toggles once")]
         public async Task ImmediateInitializationFetchCount()
         {
-            settings.UnleashApiClient = mockApiClient;
+            settings.GanpaApiClient = mockApiClient;
 
-            var unleash = await unleashFactory.CreateClientAsync(settings, synchronousInitialization: true);
+            var unleash = await GanpaFactory.CreateClientAsync(settings, synchronousInitialization: true);
 
             A.CallTo(() => mockApiClient.FetchToggles(string.Empty, A<CancellationToken>.Ignored, true))
                 .MustHaveHappenedOnceExactly();
@@ -42,7 +42,7 @@ namespace Unleash.Tests.ClientFactory
         [Test(Description = "Immediate initialization: Should be ready after creation")]
         public async Task ImmediateInitializationReadyAfterConstruction()
         {
-            var unleash = await unleashFactory.CreateClientAsync(settings, synchronousInitialization: true);
+            var unleash = await GanpaFactory.CreateClientAsync(settings, synchronousInitialization: true);
 
             unleash.IsEnabled("one-enabled", false)
                 .Should().BeTrue();
@@ -51,29 +51,29 @@ namespace Unleash.Tests.ClientFactory
         [Test(Description = "Immediate initialization: Should bubble up errors")]
         public void ImmediateInitializationBubbleErrors()
         {
-            settings.UnleashApiClient = mockApiClient;
+            settings.GanpaApiClient = mockApiClient;
             A.CallTo(() => mockApiClient.FetchToggles(A<string>.Ignored, A<CancellationToken>.Ignored, true))
                 .Throws<Exception>();
 
-            Assert.ThrowsAsync<Exception>(async () => await unleashFactory.CreateClientAsync(settings, synchronousInitialization: true));
+            Assert.ThrowsAsync<Exception>(async () => await GanpaFactory.CreateClientAsync(settings, synchronousInitialization: true));
         }
 
         [Test(Description = "Immediate initialization: Should bubble up async fetch errors")]
         public void ImmediateInitializationBubbleAsyncErrors()
         {
-            settings.UnleashApiClient = mockApiClient;
+            settings.GanpaApiClient = mockApiClient;
             A.CallTo(() => mockApiClient.FetchToggles(A<string>.Ignored, A<CancellationToken>.Ignored, true))
                 .ThrowsAsync(new Exception());
 
-            Assert.ThrowsAsync<Exception>(async () => await unleashFactory.CreateClientAsync(settings, synchronousInitialization: true));
+            Assert.ThrowsAsync<Exception>(async () => await GanpaFactory.CreateClientAsync(settings, synchronousInitialization: true));
         }
 
         [Test(Description = "Delayed initialization: Should only fetch toggles once")]
         public async Task DelayedInitializationFetchCount()
         {
-            settings.UnleashApiClient = mockApiClient;
+            settings.GanpaApiClient = mockApiClient;
 
-            var unleash = await unleashFactory.CreateClientAsync(settings);
+            var unleash = await GanpaFactory.CreateClientAsync(settings);
 
             A.CallTo(() => mockApiClient.FetchToggles(string.Empty, A<CancellationToken>.Ignored, false))
                 .MustHaveHappenedOnceExactly();
@@ -82,7 +82,7 @@ namespace Unleash.Tests.ClientFactory
         [Test(Description = "Delayed initialization: Should be ready after creation")]
         public void DelayedInitializationNotReadyAfterConstruction()
         {
-            var unleash = unleashFactory.CreateClientAsync(settings).Result;
+            var unleash = GanpaFactory.CreateClientAsync(settings).Result;
 
             unleash.IsEnabled("one-enabled", false)
                 .Should().BeFalse();
@@ -92,7 +92,7 @@ namespace Unleash.Tests.ClientFactory
         public void Synchronous_Initialization_400s_Throws()
         {
             // Act, Assert
-            Assert.Throws<UnleashException>(() =>
+            Assert.Throws<GanpaException>(() =>
             {
                 var unleash = GetUnleash(new HttpResponseMessage()
                 {
@@ -109,7 +109,7 @@ namespace Unleash.Tests.ClientFactory
         public void Synchronous_Initialization_429_Throws()
         {
             // Act, Assert
-            Assert.Throws<UnleashException>(() =>
+            Assert.Throws<GanpaException>(() =>
             {
                 var unleash = GetUnleash(new HttpResponseMessage()
                 {
@@ -162,7 +162,7 @@ namespace Unleash.Tests.ClientFactory
         public void Synchronous_Initialization_302_Throws()
         {
             // Act, Assert
-            Assert.Throws<UnleashException>(() =>
+            Assert.Throws<GanpaException>(() =>
             {
                 var unleash = GetUnleash(new HttpResponseMessage()
                 {
@@ -179,7 +179,7 @@ namespace Unleash.Tests.ClientFactory
         public void Synchronous_Initialization_500_Throws()
         {
             // Act, Assert
-            Assert.Throws<UnleashException>(() =>
+            Assert.Throws<GanpaException>(() =>
             {
                 var unleash = GetUnleash(new HttpResponseMessage()
                 {
@@ -192,14 +192,14 @@ namespace Unleash.Tests.ClientFactory
             });
         }
 
-        private IUnleash GetUnleash(HttpResponseMessage response)
+        private IGanpa GetUnleash(HttpResponseMessage response)
         {
             var fakeHttpClientFactory = A.Fake<IHttpClientFactory>();
-            var settings = new UnleashSettings()
+            var settings = new GanpaSettings()
             {
                 AppName = "testapp",
                 UnleashApi = new Uri("http://localhost:8080/"),
-                ScheduledTaskManager = A.Fake<IUnleashScheduledTaskManager>(),
+                ScheduledTaskManager = A.Fake<IGanpaScheduledTaskManager>(),
                 HttpClientFactory = fakeHttpClientFactory
             };
             var responseContent = TestData;
@@ -207,7 +207,7 @@ namespace Unleash.Tests.ClientFactory
             fakeHttpMessageHandler.Response = response;
             var client = new HttpClient(fakeHttpMessageHandler);
             client.BaseAddress = settings.UnleashApi;
-            var factory = new UnleashClientFactory();
+            var factory = new GanpaClientFactory();
             A.CallTo(() => fakeHttpClientFactory.Create(A<Uri>._)).Returns(client);
             return factory.CreateClient(settings, synchronousInitialization: true);
         }

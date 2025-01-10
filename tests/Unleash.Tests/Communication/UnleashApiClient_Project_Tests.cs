@@ -17,14 +17,14 @@ namespace Unleash.Tests.Communication
 {
     public class UnleashApiClient_Project_Tests
     {
-        private UnleashApiClient NewTestableClient(string project, MockHttpMessageHandler messageHandler)
+        private GanpaApiClient NewTestableClient(string project, MockHttpMessageHandler messageHandler)
         {
-            var apiUri = new Uri("http://unleash.herokuapp.com/api/");
+            var apiUri = new Uri("http://_ganpa.herokuapp.com/api/");
 
             var jsonSerializer = new DynamicNewtonsoftJsonSerializer();
             jsonSerializer.TryLoad();
 
-            var requestHeaders = new UnleashApiClientRequestHeaders
+            var requestHeaders = new GanpaApiClientRequestHeaders
             {
                 AppName = "api-test-client",
                 InstanceTag = "instance1",
@@ -38,7 +38,7 @@ namespace Unleash.Tests.Communication
                 Timeout = TimeSpan.FromSeconds(5)
             };
 
-            return new UnleashApiClient(httpClient, jsonSerializer, requestHeaders, new EventCallbackConfig(), project);
+            return new GanpaApiClient(httpClient, jsonSerializer, requestHeaders, new EventCallbackConfig(), project);
         }
 
         [Test]

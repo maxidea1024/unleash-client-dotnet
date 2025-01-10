@@ -50,7 +50,7 @@ namespace Unleash.Tests.Strategy
         public void test(string actualIp, string parameterstring, bool expected)
         {
 
-            var context = UnleashContext.New().RemoteAddress(actualIp).Build();
+            var context = GanpaContext.New().RemoteAddress(actualIp).Build();
             var parameters = setupParameterMap(parameterstring);
 
             strategy.IsEnabled(parameters, context).Should().Be(expected);
@@ -59,7 +59,7 @@ namespace Unleash.Tests.Strategy
         private Dictionary<string, string> setupParameterMap(string ipstring)
         {
             var parameters = new Dictionary<string, string>();
-            parameters.Add(RemoteAddressStrategy.PARAM, ipstring);
+            parameters.Add(RemoteAddressStrategy.PARAMETER_NAME, ipstring);
             return parameters;
         }
 
@@ -68,7 +68,7 @@ namespace Unleash.Tests.Strategy
         {
             var range = "73.125.227.0/29";
             var input = "73.125.227.7";
-            var context = UnleashContext.New().RemoteAddress(input).Build();
+            var context = GanpaContext.New().RemoteAddress(input).Build();
             var parameters = setupParameterMap(range);
             strategy.IsEnabled(parameters, context).Should().BeTrue();
         }
@@ -78,7 +78,7 @@ namespace Unleash.Tests.Strategy
         {
             var range = "73.125.227.0/29,73.125.227.7";
             var input = "73.125.227.7";
-            var context = UnleashContext.New().RemoteAddress(input).Build();
+            var context = GanpaContext.New().RemoteAddress(input).Build();
             var parameters = setupParameterMap(range);
             strategy.IsEnabled(parameters, context).Should().BeTrue();
         }
@@ -88,7 +88,7 @@ namespace Unleash.Tests.Strategy
         {
             var range = "73.125.227.0/29,73.125.227.114";
             var input = "73.125.227.114";
-            var context = UnleashContext.New().RemoteAddress(input).Build();
+            var context = GanpaContext.New().RemoteAddress(input).Build();
             var parameters = setupParameterMap(range);
             strategy.IsEnabled(parameters, context).Should().BeTrue();
         }
@@ -98,7 +98,7 @@ namespace Unleash.Tests.Strategy
         {
             var range = "73.125.227.0/29,73.125.227.114";
             var input = "73.125.227.7";
-            var context = UnleashContext.New().RemoteAddress(input).Build();
+            var context = GanpaContext.New().RemoteAddress(input).Build();
             var parameters = setupParameterMap(range);
             strategy.IsEnabled(parameters, context).Should().BeTrue();
         }
@@ -108,7 +108,7 @@ namespace Unleash.Tests.Strategy
         {
             var range = "73.125.227.0/junk";
             var input = "73.125.227.7";
-            var context = UnleashContext.New().RemoteAddress(input).Build();
+            var context = GanpaContext.New().RemoteAddress(input).Build();
             var parameters = setupParameterMap(range);
             strategy.IsEnabled(parameters, context).Should().BeFalse();
         }
@@ -118,7 +118,7 @@ namespace Unleash.Tests.Strategy
         {
             var range = "73.125.227.1/59";
             var input = "73.125.227.1";
-            var context = UnleashContext.New().RemoteAddress(input).Build();
+            var context = GanpaContext.New().RemoteAddress(input).Build();
             var parameters = setupParameterMap(range);
             strategy.IsEnabled(parameters, context).Should().BeTrue();
         }
@@ -129,8 +129,8 @@ namespace Unleash.Tests.Strategy
             var range = "73.125.227.0/29";
             var correctInput = "73.125.227.7";
             var wrongInput = "73.125.227.9";
-            var contextWithCorrect = UnleashContext.New().RemoteAddress(correctInput).Build();
-            var contextWithWrong = UnleashContext.New().RemoteAddress(wrongInput).Build();
+            var contextWithCorrect = GanpaContext.New().RemoteAddress(correctInput).Build();
+            var contextWithWrong = GanpaContext.New().RemoteAddress(wrongInput).Build();
             var parameters = setupParameterMap(range);
             strategy.IsEnabled(parameters, contextWithCorrect).Should().BeTrue();
             strategy.IsEnabled(parameters, contextWithWrong).Should().BeFalse();

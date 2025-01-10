@@ -569,19 +569,19 @@ namespace Unleash.Tests.Internal
                 };
         }
 
-        public static DefaultUnleash CreateUnleash(string name, ToggleCollection state)
+        public static DefaultGanpa CreateUnleash(string name, ToggleCollection state)
         {
             var fakeHttpClientFactory = A.Fake<IHttpClientFactory>();
             var fakeHttpMessageHandler = new TestHttpMessageHandler();
             var httpClient = new HttpClient(fakeHttpMessageHandler) { BaseAddress = new Uri("http://localhost") };
-            var fakeScheduler = A.Fake<IUnleashScheduledTaskManager>();
+            var fakeScheduler = A.Fake<IGanpaScheduledTaskManager>();
             var fakeFileSystem = new MockFileSystem();
             var toggleState = Newtonsoft.Json.JsonConvert.SerializeObject(state);
 
             A.CallTo(() => fakeHttpClientFactory.Create(A<Uri>._)).Returns(httpClient);
-            A.CallTo(() => fakeScheduler.Configure(A<IEnumerable<IUnleashScheduledTask>>._, A<CancellationToken>._)).Invokes(action =>
+            A.CallTo(() => fakeScheduler.Configure(A<IEnumerable<IGanpaScheduledTask>>._, A<CancellationToken>._)).Invokes(action =>
             {
-                var task = ((IEnumerable<IUnleashScheduledTask>)action.Arguments[0]).First();
+                var task = ((IEnumerable<IGanpaScheduledTask>)action.Arguments[0]).First();
                 task.ExecuteAsync((CancellationToken)action.Arguments[1]).Wait();
             });
 
@@ -595,7 +595,7 @@ namespace Unleash.Tests.Internal
                 }
             };
 
-            var settings = new UnleashSettings
+            var settings = new GanpaSettings
             {
                 AppName = name,
                 HttpClientFactory = fakeHttpClientFactory,
@@ -603,7 +603,7 @@ namespace Unleash.Tests.Internal
                 FileSystem = fakeFileSystem
             };
 
-            var unleash = new DefaultUnleash(settings);
+            var unleash = new DefaultGanpa(settings);
 
             return unleash;
         }

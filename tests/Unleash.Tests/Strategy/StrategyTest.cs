@@ -16,12 +16,12 @@ namespace Unleash.Tests.Strategy
         {
             public string Name => "enabled";
 
-            public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context)
+            public bool IsEnabled(Dictionary<string, string> parameters, GanpaContext context)
             {
                 return true;
             }
 
-            public bool IsEnabled(Dictionary<string, string> parameters, UnleashContext context, IEnumerable<Constraint> constraints)
+            public bool IsEnabled(Dictionary<string, string> parameters, GanpaContext context, IEnumerable<Constraint> constraints)
             {
                 return StrategyUtils.IsEnabled(this, parameters, context, constraints);
             }
@@ -33,7 +33,7 @@ namespace Unleash.Tests.Strategy
             // Arrange
             var strategy = new AlwaysEnabledStrategy();
             var parameters = new Dictionary<string, string>();
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             var constraints = new List<Constraint>();
 
             // Act
@@ -49,7 +49,7 @@ namespace Unleash.Tests.Strategy
             // Arrange
             var strategy = new AlwaysEnabledStrategy();
             var parameters = new Dictionary<string, string>();
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 Environment = "test"
             };
@@ -71,7 +71,7 @@ namespace Unleash.Tests.Strategy
             // Arrange
             var strategy = new AlwaysEnabledStrategy();
             var parameters = new Dictionary<string, string>();
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 Environment = "test"
             };
@@ -93,7 +93,7 @@ namespace Unleash.Tests.Strategy
             // Arrange
             var strategy = new AlwaysEnabledStrategy();
             var parameters = new Dictionary<string, string>();
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 Environment = "test"
             };
@@ -115,7 +115,7 @@ namespace Unleash.Tests.Strategy
             // Arrange
             var strategy = new AlwaysEnabledStrategy();
             var parameters = new Dictionary<string, string>();
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 Environment = "test",
                 UserId = "123",
@@ -144,7 +144,7 @@ namespace Unleash.Tests.Strategy
             // Arrange
             var strategy = new AlwaysEnabledStrategy();
             var parameters = new Dictionary<string, string>();
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 Environment = "test",
                 UserId = "123",

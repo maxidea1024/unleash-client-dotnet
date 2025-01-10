@@ -1,0 +1,51 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1705.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unleash.Tests", "tests\Unleash.Tests\Unleash.Tests.csproj", "{FF268018-34C4-45EB-937E-2E0AB25EEEDA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{F098FC57-35D3-4289-8040-B11161E2AB0D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		build.cake = build.cake
+		CHANGELOG.md = CHANGELOG.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{29C4317B-9580-4E56-ACE0-06D3E74269D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A703F9CB-157F-4166-B81D-27779B586DCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ganpa", "src\Ganpa\Ganpa.csproj", "{6A8E5199-E89C-49E9-BAC5-AD036A0EB9A3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF268018-34C4-45EB-937E-2E0AB25EEEDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF268018-34C4-45EB-937E-2E0AB25EEEDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF268018-34C4-45EB-937E-2E0AB25EEEDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF268018-34C4-45EB-937E-2E0AB25EEEDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A8E5199-E89C-49E9-BAC5-AD036A0EB9A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A8E5199-E89C-49E9-BAC5-AD036A0EB9A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A8E5199-E89C-49E9-BAC5-AD036A0EB9A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A8E5199-E89C-49E9-BAC5-AD036A0EB9A3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FF268018-34C4-45EB-937E-2E0AB25EEEDA} = {A703F9CB-157F-4166-B81D-27779B586DCB}
+		{6A8E5199-E89C-49E9-BAC5-AD036A0EB9A3} = {29C4317B-9580-4E56-ACE0-06D3E74269D1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8777E71-3209-4072-B7D9-466A4F5C7A75}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal

@@ -55,13 +55,13 @@ namespace Unleash.Tests.Variants
             variant.FeatureEnabled.Should().BeFalse();
         }
 
-        private IUnleash GetUnleash()
+        private IGanpa GetUnleash()
         {
             var fakeHttpClientFactory = A.Fake<IHttpClientFactory>();
-            var settings = new UnleashSettings() {
+            var settings = new GanpaSettings() {
                 AppName = "testapp",
                 UnleashApi = new Uri("http://localhost:8080/"),
-                ScheduledTaskManager = A.Fake<IUnleashScheduledTaskManager>(),
+                ScheduledTaskManager = A.Fake<IGanpaScheduledTaskManager>(),
                 HttpClientFactory = fakeHttpClientFactory
             };
             var responseContent = TestData;
@@ -76,7 +76,7 @@ namespace Unleash.Tests.Variants
             };
             var client = new HttpClient(fakeHttpMessageHandler);
             client.BaseAddress = settings.UnleashApi;
-            var factory = new UnleashClientFactory();
+            var factory = new GanpaClientFactory();
             A.CallTo(() => fakeHttpClientFactory.Create(A<Uri>._)).Returns(client);
             return factory.CreateClient(settings, synchronousInitialization: true);
         }

@@ -38,7 +38,7 @@ namespace Unleash.Tests.Internal
             {
                 ErrorEvent = evt => { callbackEvent = evt; }
             };
-            var unleashClient = new UnleashApiClient(httpClient, new DynamicNewtonsoftJsonSerializer(), new UnleashApiClientRequestHeaders(), eventConfig: callbackConfig);
+            var unleashClient = new GanpaApiClient(httpClient, new DynamicNewtonsoftJsonSerializer(), new GanpaApiClientRequestHeaders(), eventConfig: callbackConfig);
             var cancellationTokenSource = new CancellationTokenSource();
 
             // Act
@@ -67,7 +67,7 @@ namespace Unleash.Tests.Internal
 
             var deserializer = new DynamicNewtonsoftJsonSerializer();
             deserializer.TryLoad();
-            var unleashClient = new UnleashApiClient(httpClient, deserializer, new UnleashApiClientRequestHeaders(), eventConfig: callbackConfig);
+            var unleashClient = new GanpaApiClient(httpClient, deserializer, new GanpaApiClientRequestHeaders(), eventConfig: callbackConfig);
             var cancellationTokenSource = new CancellationTokenSource();
 
             // Act
@@ -90,7 +90,7 @@ namespace Unleash.Tests.Internal
                 ErrorEvent = evt => { callbackEvent = evt; }
             };
 
-            var fakeApiClient = A.Fake<IUnleashApiClient>();
+            var fakeApiClient = A.Fake<IGanpaApiClient>();
             A.CallTo(() => fakeApiClient.FetchToggles(A<string>._, A<CancellationToken>._, false))
                 .ThrowsAsync(() => new HttpRequestException("The remote server refused the connection"));
 
@@ -127,7 +127,7 @@ namespace Unleash.Tests.Internal
                 ErrorEvent = evt => { callbackEvent = evt; }
             };
 
-            var fakeApiClient = A.Fake<IUnleashApiClient>();
+            var fakeApiClient = A.Fake<IGanpaApiClient>();
             A.CallTo(() => fakeApiClient.FetchToggles(A<string>._, A<CancellationToken>._, false))
                 .Returns(Task.FromResult(new FetchTogglesResult() { HasChanged = true, ToggleCollection = new ToggleCollection(), Etag = "one" }));
 
@@ -161,7 +161,7 @@ namespace Unleash.Tests.Internal
                 ErrorEvent = evt => { callbackEvent = evt; }
             };
 
-            var fakeApiClient = A.Fake<IUnleashApiClient>();
+            var fakeApiClient = A.Fake<IGanpaApiClient>();
             A.CallTo(() => fakeApiClient.FetchToggles(A<string>._, A<CancellationToken>._, false))
                 .Returns(Task.FromResult(new FetchTogglesResult() { HasChanged = true, ToggleCollection = new ToggleCollection(), Etag = "one" }));
 

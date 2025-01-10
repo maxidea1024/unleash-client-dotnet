@@ -18,7 +18,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_CONTAINS, false, false, null, "sentence");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -35,7 +35,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_CONTAINS, false, false, null, "was", "sentence", "nothing");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -52,7 +52,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_CONTAINS, false, false, null, "sentence", "should");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -69,7 +69,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_CONTAINS, false, false, null, "sentence");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A SENTENCE containing a word that should be matched");
 
             // Act
@@ -86,7 +86,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_CONTAINS, false, false, null, "something");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -103,7 +103,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_CONTAINS, true, false, null, "sentence");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A SENTENCE containing a word that should be matched");
 
             // Act
@@ -120,7 +120,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_STARTS_WITH, false, false, null, "A sentence");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -137,7 +137,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_STARTS_WITH, false, false, null, "A sentence");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A SENTENCE containing a word that should be matched");
 
             // Act
@@ -154,7 +154,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_STARTS_WITH, false, false, null, "something");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -171,7 +171,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_STARTS_WITH, true, false, null, "a sentence");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A SENTENCE containing a word that should be matched");
 
             // Act
@@ -188,7 +188,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_ENDS_WITH, false, false, null, "matched");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -205,7 +205,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_ENDS_WITH, false, false, null, "matched");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be MATCHED");
 
             // Act
@@ -222,7 +222,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_ENDS_WITH, false, false, null, "something");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -239,7 +239,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_ENDS_WITH, true, false, null, "matched");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -256,7 +256,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_ENDS_WITH, false, true, null, "something");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act
@@ -273,7 +273,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new StringConstraintOperator();
             var constraint = new Constraint("operator_string_test", Operator.STR_ENDS_WITH, true, true, null, "matched");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_string_test", "A sentence containing a word that should be matched");
 
             // Act

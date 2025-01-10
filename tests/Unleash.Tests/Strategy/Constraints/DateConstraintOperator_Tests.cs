@@ -19,7 +19,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new DateConstraintOperator();
             var constraint = new Constraint("event_date", Operator.DATE_AFTER, false, false, "2022-01-29T13:00:00.000Z");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("event_date", "2022-01-29T15:00:00.000Z");
 
             // Act
@@ -36,7 +36,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new DateConstraintOperator();
             var constraint = new Constraint("event_date", Operator.DATE_AFTER, false, false, "2022-01-29T13:00:00.000Z");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("event_date", "2022-01-29T13:00:00.000Z");
 
             // Act
@@ -53,7 +53,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new DateConstraintOperator();
             var constraint = new Constraint("event_date", Operator.DATE_AFTER, false, false, "2022-01-29T13:00:00.000Z");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("event_date", "2022-01-29T11:00:00.000Z");
 
             // Act
@@ -70,7 +70,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new DateConstraintOperator();
             var constraint = new Constraint("event_date", Operator.DATE_BEFORE, false, false, "2022-01-29T13:00:00.000Z");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("event_date", "2022-01-29T11:00:00.000Z");
 
             // Act
@@ -87,7 +87,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new DateConstraintOperator();
             var constraint = new Constraint("event_date", Operator.DATE_BEFORE, false, false, "2022-01-29T13:00:00.000Z");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("event_date", "2022-01-29T13:00:00.000Z");
 
             // Act
@@ -104,7 +104,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new DateConstraintOperator();
             var constraint = new Constraint("event_date", Operator.DATE_BEFORE, false, false, "2022-01-29T13:00:00.000Z");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("event_date", "2022-01-29T15:00:00.000Z");
 
             // Act
@@ -121,7 +121,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new DateConstraintOperator();
             var constraint = new Constraint("event_date", Operator.DATE_BEFORE, false, true, "2022-01-29T13:00:00.000Z");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("event_date", "2022-01-29T11:00:00.000Z");
 
             // Act
@@ -138,7 +138,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new DateConstraintOperator();
             var constraint = new Constraint("event_date", Operator.DATE_BEFORE, false, true, "2022-01-29T13:00:00.000Z");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("event_date", "2022-01-29T13:00:00.000Z");
 
             // Act

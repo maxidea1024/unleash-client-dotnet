@@ -25,7 +25,7 @@ namespace Unleash.Tests.Internal
                 TogglesUpdatedEvent = evt => { callbackEvent = evt; }
             };
 
-            var fakeApiClient = A.Fake<IUnleashApiClient>();
+            var fakeApiClient = A.Fake<IGanpaApiClient>();
             A.CallTo(() => fakeApiClient.FetchToggles(A<string>._, A<CancellationToken>._, false))
                 .Returns(Task.FromResult(new FetchTogglesResult { HasChanged = true, ToggleCollection = new ToggleCollection(), Etag = "one" }));
 
@@ -54,7 +54,7 @@ namespace Unleash.Tests.Internal
                 TogglesUpdatedEvent = evt => { callbackEvent = evt; }
             };
 
-            var fakeApiClient = A.Fake<IUnleashApiClient>();
+            var fakeApiClient = A.Fake<IGanpaApiClient>();
             A.CallTo(() => fakeApiClient.FetchToggles(A<string>._, A<CancellationToken>._, false))
                 .Returns(Task.FromResult(new FetchTogglesResult { HasChanged = false, ToggleCollection = new ToggleCollection(), Etag = "one" }));
 
@@ -91,7 +91,7 @@ namespace Unleash.Tests.Internal
                 TogglesUpdatedEvent = evt => { toggleIsEnabledResultAfterEvent = toggleCollection.Instance.Features.ElementAt(0).Enabled; }
             };
 
-            var fakeApiClient = A.Fake<IUnleashApiClient>();
+            var fakeApiClient = A.Fake<IGanpaApiClient>();
             A.CallTo(() => fakeApiClient.FetchToggles(A<string>._, A<CancellationToken>._, false))
                 .Returns(Task.FromResult(new FetchTogglesResult { HasChanged = true, ToggleCollection = fetchResultToggleCollection, Etag = "one" }));
 

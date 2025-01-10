@@ -10,7 +10,7 @@ namespace Unleash.Tests
 
     public class IOTests
     {
-        private IUnleash unleash;
+        private IGanpa _ganpa;
 
         private static void LockFile(object data)
         {
@@ -24,7 +24,7 @@ namespace Unleash.Tests
         [Test]
         public async Task GracefullyFailsWhenFileLocked()
         {
-            var settings = new MockedUnleashSettings(false, "test instance IOTests");
+            var settings = new MockedGanpaSettings(false, "test instance IOTests");
             
             var toggleFile = settings.GetFeatureToggleFilePath();
             var eTagFile = settings.GetFeatureToggleETagFilePath();
@@ -34,10 +34,10 @@ namespace Unleash.Tests
             lockToggleFile.Start(toggleFile);
             lockETagFile.Start(eTagFile);
             
-            var factory = new UnleashClientFactory();
-            unleash = await factory.CreateClientAsync(settings, true);
+            var factory = new GanpaClientFactory();
+            _ganpa = await factory.CreateClientAsync(settings, true);
 
-            unleash.IsEnabled("one-enabled").Should().BeTrue();
+            _ganpa.IsEnabled("one-enabled").Should().BeTrue();
         }
     }
 }

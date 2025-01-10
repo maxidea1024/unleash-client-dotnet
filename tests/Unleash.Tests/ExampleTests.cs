@@ -8,33 +8,33 @@ namespace Unleash.Tests
 
     public class ExampleTests
     {
-        private IUnleash unleash;
+        private IGanpa _ganpa;
 
         [SetUp]
         public async Task Setup()
         {
-            var factory = new UnleashClientFactory();
-            unleash = await factory.CreateClientAsync(new MockedUnleashSettings(instanceTag: "test instance ExampleTests"), true);
+            var factory = new GanpaClientFactory();
+            _ganpa = await factory.CreateClientAsync(new MockedGanpaSettings(instanceTag: "test instance ExampleTests"), true);
         }
 
         [Test]
         public void UserAEnabled()
         {
-            unleash.IsEnabled("one-enabled")
+            _ganpa.IsEnabled("one-enabled")
                 .Should().BeTrue();
         }
 
         [Test]
         public void DisabledFeature()
         {
-            unleash.IsEnabled("one-disabled")
+            _ganpa.IsEnabled("one-disabled")
                 .Should().BeFalse();
         }
 
         [TearDown]
         public void Dispose()
         {
-            unleash?.Dispose();
+            _ganpa?.Dispose();
         }
     }
 }

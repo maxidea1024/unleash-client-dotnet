@@ -18,7 +18,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_LT, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "3");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -33,7 +33,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_LT, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "5");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -48,7 +48,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_LT, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "6");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -63,7 +63,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_LTE, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "3");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -78,7 +78,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_LTE, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "5");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -93,7 +93,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_LTE, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "6");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -108,7 +108,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_GT, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "3");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -123,7 +123,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_GT, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "5");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -138,7 +138,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_GT, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "6");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -153,7 +153,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_GTE, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "3");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -168,7 +168,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_GTE, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "5");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -183,7 +183,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_GTE, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "6");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -198,7 +198,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_EQ, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "3");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -213,7 +213,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_EQ, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "5");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -228,7 +228,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_EQ, false, false, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "6");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -243,7 +243,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_EQ, false, true, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "5");
             // Act
             var result = target.Evaluate(constraint, context);
@@ -258,7 +258,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new NumberConstraintOperator();
             var constraint = new Constraint("item_count", Operator.NUM_EQ, false, true, "5");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("item_count", "6");
             // Act
             var result = target.Evaluate(constraint, context);

@@ -1,0 +1,118 @@
+﻿using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Ganpa.Communication;
+using Ganpa.Internal;
+using Ganpa.Serialization;
+using Ganpa.Logging;
+using Ganpa.Events;
+using System.Net.Http;
+
+namespace Ganpa.Scheduling
+{
+    internal class FetchFeatureTogglesTask : IGanpaScheduledTask
+    {
+        private static readonly ILog Logger = LogProvider.GetLogger(typeof(FetchFeatureTogglesTask));
+
+        private readonly string _toggleFile;
+        private readonly string _etagFile;
+        private readonly IFileSystem _fileSystem;
+        private readonly EventCallbackConfig _eventConfig;
+        private readonly IGanpaApiClient _apiClient;
+        private readonly IJsonSerializer _jsonSerializer;
+        private readonly ThreadSafeToggleCollection _toggleCollection;
+        private readonly bool _throwOnInitialLoadFail;
+        private bool _ready = false;
+
+        // In-memory reference of toggles/etags
+        internal string Etag { get; set; }
+
+        public string Name => "fetch-feature-toggles-task";
+        public TimeSpan Interval { get; set; }
+        public bool ExecuteDuringStartup { get; set; }
+
+        public FetchFeatureTogglesTask(
+            IGanpaApiClient apiClient,
+            ThreadSafeToggleCollection toggleCollection,
+            IJsonSerializer jsonSerializer,
+            IFileSystem fileSystem,
+            EventCallbackConfig eventConfig,
+            string toggleFile,
+            string etagFile,
+            bool throwOnInitialLoadFail)
+        {
+            _apiClient = apiClient;
+            _toggleCollection = toggleCollection;
+            _jsonSerializer = jsonSerializer;
+            _fileSystem = fileSystem;
+            _eventConfig = eventConfig;
+            _toggleFile = toggleFile;
+            _etagFile = etagFile;
+            _throwOnInitialLoadFail = throwOnInitialLoadFail;
+        }
+
+        public async Task ExecuteAsync(CancellationToken cancellationToken)
+        {
+            FetchTogglesResult result;
+            try
+            {
+                result = await _apiClient.FetchToggles(Etag, cancellationToken, !_ready && _throwOnInitialLoadFail)
+                    .ConfigureAwait(false);
+            }
+            catch (HttpRequestException ex)
+            {
+                Logger.Warn(() => $"UNLEASH: Unhandled exception when fetching toggles.", ex);
+                _eventConfig?.RaiseError(new ErrorEvent() { ErrorType = ErrorType.Client, Error = ex });
+                throw new GanpaException("Exception while fetching from API", ex);
+            }
+
+            _ready = true;
+
+            if (!result.HasChanged)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(result.Etag))
+            {
+                return;
+            }
+
+            if (result.Etag == Etag)
+            {
+                return;
+            }
+
+            _toggleCollection.Instance = result.ToggleCollection;
+
+            // now that the toggle collection has been updated, raise the toggles updated event if configured
+            _eventConfig?.RaiseTogglesUpdated(new TogglesUpdatedEvent { UpdatedOn = DateTime.UtcNow });
+
+            try
+            {
+                using (var fs = _fileSystem.FileOpenCreate(_toggleFile))
+                {
+                    _jsonSerializer.Serialize(fs, result.ToggleCollection);
+                }
+            }
+            catch (IOException ex)
+            {
+                Logger.Warn(() => $"GANPA: Exception when writing to toggle file '{_toggleFile}'.", ex);
+                _eventConfig?.RaiseError(new ErrorEvent() { ErrorType = ErrorType.TogglesBackup, Error = ex });
+            }
+
+            Etag = result.Etag;
+
+            try
+            {
+                _fileSystem.WriteAllText(_etagFile, Etag);
+            }
+            catch (IOException ex)
+            {
+                Logger.Warn(() => $"UNLEASH: Exception when writing to ETag file '{_etagFile}'.", ex);
+                _eventConfig?.RaiseError(new ErrorEvent() { ErrorType = ErrorType.TogglesBackup, Error = ex });
+            }
+        }
+    }
+}

@@ -30,7 +30,7 @@ namespace Unleash.Tests.Utilities
             };
             messageHandlerMock.Configure(path, returnMessage);
             var client = new HttpClient(messageHandlerMock);
-            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new UnleashSettings() { JsonSerializer = new JsonNetSerializer() });
+            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new GanpaSettings() { JsonSerializer = new JsonNetSerializer() });
 
             // Act
             var responseContent = bootstrapUrlProvider.Read();
@@ -58,7 +58,7 @@ namespace Unleash.Tests.Utilities
             A.CallTo(() => fakeHttpClientFactory.Create(A<Uri>._)).Returns(client);
 
 
-            var settings = new UnleashSettings()
+            var settings = new GanpaSettings()
             {
                 JsonSerializer = new JsonNetSerializer(),
                 HttpClientFactory = fakeHttpClientFactory
@@ -83,7 +83,7 @@ namespace Unleash.Tests.Utilities
             var returnMessage = new HttpResponseMessage(System.Net.HttpStatusCode.NotFound) { Content = new StringContent("") };
             messageHandlerMock.Configure(path, returnMessage);
             var client = new HttpClient(messageHandlerMock);
-            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new UnleashSettings());
+            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new GanpaSettings());
 
             // Act
             var responseContent = bootstrapUrlProvider.Read();
@@ -103,7 +103,7 @@ namespace Unleash.Tests.Utilities
             var returnMessage = new HttpResponseMessage(System.Net.HttpStatusCode.NotFound) { Content = new StringContent("") };
             messageHandlerMock.Configure(path, returnMessage);
             var client = new HttpClient(messageHandlerMock);
-            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new UnleashSettings(), true);
+            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new GanpaSettings(), true);
 
             // Act, Assert
             Assert.Throws<FetchingToggleBootstrapUrlFailedException>(() => { var responseContent = bootstrapUrlProvider.Read(); });
@@ -126,7 +126,7 @@ namespace Unleash.Tests.Utilities
             };
             messageHandlerMock.Configure(path, returnMessage);
             var client = new HttpClient(messageHandlerMock);
-            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new UnleashSettings() { JsonSerializer = new JsonNetSerializer() }, false, customHeaders);
+            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new GanpaSettings() { JsonSerializer = new JsonNetSerializer() }, false, customHeaders);
 
             // Act
             var responseContent = bootstrapUrlProvider.Read();
@@ -152,7 +152,7 @@ namespace Unleash.Tests.Utilities
             };
             messageHandlerMock.Configure(path, returnMessage);
             var client = new HttpClient(messageHandlerMock);
-            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new UnleashSettings());
+            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new GanpaSettings());
 
             // Act
             var responseContent = bootstrapUrlProvider.Read();
@@ -176,10 +176,10 @@ namespace Unleash.Tests.Utilities
             };
             messageHandlerMock.Configure(path, returnMessage);
             var client = new HttpClient(messageHandlerMock);
-            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new UnleashSettings(), true);
+            var bootstrapUrlProvider = new ToggleBootstrapUrlProvider(path, client, new GanpaSettings(), true);
 
             // Act, Assert
-            Assert.Throws<UnleashException>(() => { var responseContent = bootstrapUrlProvider.Read(); });
+            Assert.Throws<GanpaException>(() => { var responseContent = bootstrapUrlProvider.Read(); });
         }
     }
 }

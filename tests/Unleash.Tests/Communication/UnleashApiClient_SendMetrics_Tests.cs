@@ -20,8 +20,8 @@ namespace Unleash.Tests.Communication
             result.Should().Be(true);
 
             // Check result:
-            // http://unleash.herokuapp.com/#/features/view/Demo123
-            // http://unleash.herokuapp.com/api/admin/metrics/feature-toggles    
+            // http://_ganpa.herokuapp.com/#/features/view/Demo123
+            // http://_ganpa.herokuapp.com/api/admin/metrics/feature-toggles    
         }
         
     }

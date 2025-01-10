@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using Ganpa.Internal;
+
+namespace Ganpa.Strategies
+{
+    public class FlexibleRolloutStrategy : IStrategy
+    {
+        public static readonly string Percentage = "rollout";
+        public static readonly string GroupId = "groupId";
+
+        public string Name => "flexibleRollout";
+        private Func<string> _randomGenerator;
+
+        public FlexibleRolloutStrategy()
+        {
+            var random = new Random();
+            _randomGenerator = () => (random.Next() * 100).ToString();
+        }
+
+        public FlexibleRolloutStrategy(Func<string> randomGenerator)
+        {
+            _randomGenerator = randomGenerator;
+        }
+
+        public bool IsEnabled(Dictionary<string, string> parameters, GanpaContext context,
+            IEnumerable<Constraint> constraints)
+        {
+            return StrategyUtils.IsEnabled(this, parameters, context, constraints);
+        }
+
+        public bool IsEnabled(Dictionary<string, string> parameters, GanpaContext context)
+        {
+            var stickiness = GetStickiness(parameters);
+            var stickinessId = ResolveStickiness(stickiness, context);
+            var percentage = StrategyUtils.GetPercentage(parameters.TryGetValue(Percentage, out var percentageString)
+                ? percentageString
+                : null);
+            parameters.TryGetValue(GroupId, out var groupId);
+
+            if (string.IsNullOrEmpty(groupId))
+            {
+                groupId = "";
+            }
+
+            if (!(stickinessId is null))
+            {
+                var normalizedUserId = StrategyUtils.GetNormalizedNumber(stickinessId, groupId, 0);
+                return percentage > 0 && normalizedUserId <= percentage;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private string GetStickiness(Dictionary<string, string> parameters)
+        {
+            parameters.TryGetValue("stickiness", out var stickiness);
+            return stickiness ?? "default";
+        }
+
+        private string ResolveStickiness(string stickiness, GanpaContext context)
+        {
+            switch (stickiness)
+            {
+                case "random":
+                    return _randomGenerator();
+                case "default":
+                    return context?.UserId
+                           ?? context?.SessionId
+                           ?? _randomGenerator();
+                default:
+                    return context.GetByName(stickiness);
+            }
+        }
+    }
+}

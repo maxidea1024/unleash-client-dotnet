@@ -18,7 +18,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, false, "1.0.0");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.0.1");
 
             // Act
@@ -34,7 +34,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, false, "1.0.0");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.1.0");
 
             // Act
@@ -50,7 +50,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, false, "1.0.1");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.1.0");
 
             // Act
@@ -66,7 +66,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, false, "1.1.0");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "2.0.0");
 
             // Act
@@ -82,7 +82,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, false, "1.0.0");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "2.0.0");
 
             // Act
@@ -98,7 +98,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_EQ, false, false, "1.0.2");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.0.2");
 
             // Act
@@ -114,7 +114,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_EQ, false, false, "1.2.0");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.2.0");
 
             // Act
@@ -130,7 +130,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_EQ, false, false, "2.0.0");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "2.0.0");
 
             // Act
@@ -146,7 +146,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_LT, false, false, "1.0.2");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.0.1");
 
             // Act
@@ -162,7 +162,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_LT, false, false, "1.2.0");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.1.0");
 
             // Act
@@ -178,7 +178,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_LT, false, false, "2.0.0");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.0.0");
 
             // Act
@@ -194,7 +194,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, false, "1.0.2-alpha");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.0.2-beta");
 
             // Act
@@ -210,7 +210,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, false, "1.0.2-beta2");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.0.2-rc1");
 
             // Act
@@ -226,7 +226,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, false, "1.0.2-rc2");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.0.2");
 
             // Act
@@ -242,7 +242,7 @@ namespace Unleash.Tests.Strategy.Constraints
             // Arrange
             var target = new SemverConstraintOperator();
             var constraint = new Constraint("operator_semver_test", Operator.SEMVER_GT, false, true, "1.0.2-rc2");
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "1.0.2");
 
             // Act
@@ -264,7 +264,7 @@ namespace Unleash.Tests.Strategy.Constraints
                 true,
                 "definitely.not.a.valid.semver"
             );
-            var context = new UnleashContext();
+            var context = new GanpaContext();
             context.Properties.Add("operator_semver_test", "also.definitely.not.a.semver");
 
             // Act + Assert

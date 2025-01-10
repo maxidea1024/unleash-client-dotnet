@@ -21,10 +21,10 @@ public class UnleashApiClient_Metrics_Backoff_Tests : BaseBackoffTest
         var httpClient = new HttpClient(messageHandler);
         httpClient.BaseAddress = new Uri("http://localhost:8080/");
 
-        var apiClient = new UnleashApiClient(
+        var apiClient = new GanpaApiClient(
             httpClient,
             A.Fake<IJsonSerializer>(),
-            A.Fake<UnleashApiClientRequestHeaders>(),
+            A.Fake<GanpaApiClientRequestHeaders>(),
             new EventCallbackConfig()
         );
 
@@ -52,10 +52,10 @@ public class UnleashApiClient_Metrics_Backoff_Tests : BaseBackoffTest
         var httpClient = new HttpClient(messageHandler);
         httpClient.BaseAddress = new Uri("http://localhost:8080/");
 
-        var apiClient = new UnleashApiClient(
+        var apiClient = new GanpaApiClient(
             httpClient,
             A.Fake<IJsonSerializer>(),
-            A.Fake<UnleashApiClientRequestHeaders>(),
+            A.Fake<GanpaApiClientRequestHeaders>(),
             new EventCallbackConfig()
         );
 
@@ -97,10 +97,10 @@ public class UnleashApiClient_Metrics_Backoff_Tests : BaseBackoffTest
         var httpClient = new HttpClient(messageHandler);
         httpClient.BaseAddress = new Uri("http://localhost:8080/");
 
-        var apiClient = new UnleashApiClient(
+        var apiClient = new GanpaApiClient(
             httpClient,
             A.Fake<IJsonSerializer>(),
-            A.Fake<UnleashApiClientRequestHeaders>(),
+            A.Fake<GanpaApiClientRequestHeaders>(),
             new EventCallbackConfig()
         );
 

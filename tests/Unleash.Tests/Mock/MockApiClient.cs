@@ -8,7 +8,7 @@ using Unleash.Variants;
 
 namespace Unleash.Tests.Mock
 {
-    internal class MockApiClient : IUnleashApiClient
+    internal class MockApiClient : IGanpaApiClient
     {
         private static readonly ToggleCollection Toggles = new ToggleCollection(new List<FeatureToggle>
         {

@@ -24,7 +24,7 @@ namespace Unleash.Tests.Strategy
             var strategy = new FlexibleRolloutStrategy();
 
             // Assert
-            strategy.IsEnabled(new Dictionary<string, string>(), new UnleashContext()).Should().BeFalse();
+            strategy.IsEnabled(new Dictionary<string, string>(), new GanpaContext()).Should().BeFalse();
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "default" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "61"
             };
@@ -61,7 +61,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "default" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "61"
             };
@@ -84,7 +84,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "userId" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = "61"
             };
@@ -107,7 +107,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "userId" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext();
+            var context = new GanpaContext();
 
             // Act
             var enabled = strategy.IsEnabled(parameters, context);
@@ -127,7 +127,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "default" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 SessionId = "61"
             };
@@ -150,7 +150,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "sessionId" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 SessionId = "61"
             };
@@ -173,7 +173,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "default" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext();
+            var context = new GanpaContext();
 
             // Act
             var enabled = strategy.IsEnabled(parameters, context);
@@ -193,7 +193,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "random" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext();
+            var context = new GanpaContext();
 
             // Act
             var enabled = strategy.IsEnabled(parameters, context);
@@ -213,7 +213,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "default" },
                 { "groupId", "Demo" }
             };
-            var context = new UnleashContext();
+            var context = new GanpaContext();
 
             // Act
             var enabled = strategy.IsEnabled(parameters, context);
@@ -233,7 +233,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "customField" },
                 { "groupId", "Feature.flexible.rollout.custom.stickiness_50" }
             };
-            var context = new UnleashContext()
+            var context = new GanpaContext()
             {
                 Properties = new Dictionary<string, string>()
                 {
@@ -259,7 +259,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "customField" },
                 { "groupId", "Feature.flexible.rollout.custom.stickiness_50" }
             };
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 Properties = new Dictionary<string, string>
                 {
@@ -285,7 +285,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "customField" },
                 { "groupId", "Feature.flexible.rollout.custom.stickiness_50" }
             };
-            var context = new UnleashContext();
+            var context = new GanpaContext();
 
             // Act
             var enabled = strategy.IsEnabled(parameters, context);
@@ -305,7 +305,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "customField" },
                 { "groupId", "Feature.flexible.rollout.custom.stickiness_100" }
             };
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 Properties = new Dictionary<string, string>
                 {
@@ -348,7 +348,7 @@ namespace Unleash.Tests.Strategy
                 { "stickiness", "default" },
                 { "groupId", "Feature.flexible.rollout.custom.stickiness_100" }
             };
-            var context = new UnleashContext
+            var context = new GanpaContext
             {
                 UserId = string.Empty
             };

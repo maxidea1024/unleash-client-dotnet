@@ -243,20 +243,20 @@ namespace Unleash.Tests.Variants
             return new Constraint("item-id", Operator.NUM_EQ, false, false, "1");
         }
 
-        public static IUnleash CreateUnleash(ToggleCollection state)
+        public static IGanpa CreateUnleash(ToggleCollection state)
         {
             var name = "test";
             var fakeHttpClientFactory = A.Fake<IHttpClientFactory>();
             var fakeHttpMessageHandler = new TestHttpMessageHandler();
             var httpClient = new HttpClient(fakeHttpMessageHandler) { BaseAddress = new Uri("http://localhost") };
-            var fakeScheduler = A.Fake<IUnleashScheduledTaskManager>();
+            var fakeScheduler = A.Fake<IGanpaScheduledTaskManager>();
             var fakeFileSystem = new MockFileSystem();
             var toggleState = Newtonsoft.Json.JsonConvert.SerializeObject(state);
 
             A.CallTo(() => fakeHttpClientFactory.Create(A<Uri>._)).Returns(httpClient);
-            A.CallTo(() => fakeScheduler.Configure(A<IEnumerable<IUnleashScheduledTask>>._, A<CancellationToken>._)).Invokes(action =>
+            A.CallTo(() => fakeScheduler.Configure(A<IEnumerable<IGanpaScheduledTask>>._, A<CancellationToken>._)).Invokes(action =>
             {
-                var task = ((IEnumerable<IUnleashScheduledTask>)action.Arguments[0]).First();
+                var task = ((IEnumerable<IGanpaScheduledTask>)action.Arguments[0]).First();
                 task.ExecuteAsync((CancellationToken)action.Arguments[1]).Wait();
             });
 
@@ -270,19 +270,19 @@ namespace Unleash.Tests.Variants
                 }
             };
 
-            var contextBuilder = new UnleashContext.Builder();
+            var contextBuilder = new GanpaContext.Builder();
             contextBuilder.AddProperty("item-id", "1");
 
-            var settings = new UnleashSettings
+            var settings = new GanpaSettings
             {
                 AppName = name,
-                UnleashContextProvider = new DefaultUnleashContextProvider(contextBuilder.Build()),
+                GanpaContextProvider = new DefaultGanpaContextProvider(contextBuilder.Build()),
                 HttpClientFactory = fakeHttpClientFactory,
                 ScheduledTaskManager = fakeScheduler,
                 FileSystem = fakeFileSystem
             };
 
-            var unleash = new DefaultUnleash(settings);
+            var unleash = new DefaultGanpa(settings);
 
             return unleash;
         }

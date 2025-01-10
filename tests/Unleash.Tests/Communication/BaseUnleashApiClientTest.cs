@@ -12,16 +12,16 @@ namespace Unleash.Tests.Communication
 {
     public abstract class BaseUnleashApiClientTest
     {
-        private static IUnleashApiClient CreateApiClient()
+        private static IGanpaApiClient CreateApiClient()
         {
-            var apiUri = new Uri("http://unleash.herokuapp.com/api/");
+            var apiUri = new Uri("http://_ganpa.herokuapp.com/api/");
 
             var jsonSerializer = new DynamicNewtonsoftJsonSerializer();
             jsonSerializer.TryLoad();
 
             var httpClientFactory = new DefaultHttpClientFactory();
 
-            var requestHeaders = new UnleashApiClientRequestHeaders
+            var requestHeaders = new GanpaApiClientRequestHeaders
             {
                 AppName = "api-test-client",
                 InstanceTag = "instance1",
@@ -34,13 +34,13 @@ namespace Unleash.Tests.Communication
             };
 
             var httpClient = httpClientFactory.Create(apiUri);
-            var client = new UnleashApiClient(httpClient, jsonSerializer, requestHeaders, new EventCallbackConfig());
+            var client = new GanpaApiClient(httpClient, jsonSerializer, requestHeaders, new EventCallbackConfig());
             return client;
         }
 
-        internal IUnleashApiClient api
+        internal IGanpaApiClient api
         {
-            get => TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("api") as IUnleashApiClient;
+            get => TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("api") as IGanpaApiClient;
             set => TestExecutionContext.CurrentContext.CurrentTest.Properties.Set("api", value);
         }
 

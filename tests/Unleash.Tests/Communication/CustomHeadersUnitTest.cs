@@ -16,12 +16,12 @@ namespace Unleash.Tests.Communication
     {
         private static string FEATURES_PATH = Path.Combine(TestContext.CurrentContext.TestDirectory, "App_Data", "features-v1-empty.json");
 
-        private IUnleashApiClient CreateApiClient()
+        private IGanpaApiClient CreateApiClient()
         {
             var jsonSerializer = new DynamicNewtonsoftJsonSerializer();
             jsonSerializer.TryLoad();
 
-            var requestHeaders = new UnleashApiClientRequestHeaders
+            var requestHeaders = new GanpaApiClientRequestHeaders
             {
                 AppName = "api-test-client",
                 InstanceTag = "instance1",
@@ -33,7 +33,7 @@ namespace Unleash.Tests.Communication
             {
                 BaseAddress = new Uri("http://example.com")
             };
-            var client = new UnleashApiClient(httpClient, jsonSerializer, requestHeaders, null);
+            var client = new GanpaApiClient(httpClient, jsonSerializer, requestHeaders, null);
             return client;
         }
 
@@ -55,9 +55,9 @@ namespace Unleash.Tests.Communication
             }
         }
 
-        private IUnleashApiClient api
+        private IGanpaApiClient api
         {
-            get => TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("api") as IUnleashApiClient;
+            get => TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("api") as IGanpaApiClient;
             set => TestExecutionContext.CurrentContext.CurrentTest.Properties.Set("api", value);
         }
 
@@ -69,9 +69,9 @@ namespace Unleash.Tests.Communication
         }
 
 
-        IUnleashCustomHttpHeaderProvider httpHeadersProvider
+        IGanpaCustomHttpHeaderProvider httpHeadersProvider
         {
-            get => TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("httpHeadersProvider") as IUnleashCustomHttpHeaderProvider;
+            get => TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("httpHeadersProvider") as IGanpaCustomHttpHeaderProvider;
             set => TestExecutionContext.CurrentContext.CurrentTest.Properties.Set("httpHeadersProvider", value);
         }
 
@@ -111,7 +111,7 @@ namespace Unleash.Tests.Communication
             }
         }
 
-        class UnleashCustomHttpHeaderProvider : IUnleashCustomHttpHeaderProvider
+        class GanpaCustomHttpHeaderProvider : IGanpaCustomHttpHeaderProvider
         {
             public Dictionary<string, string> CustomHeaders => new Dictionary<string, string>
             {
@@ -124,7 +124,7 @@ namespace Unleash.Tests.Communication
         public async Task DynamicHttpHeaders()
         {
 
-            httpHeadersProvider = new UnleashCustomHttpHeaderProvider();
+            httpHeadersProvider = new GanpaCustomHttpHeaderProvider();
             api = CreateApiClient();
 
             var etag = "";

@@ -43,7 +43,7 @@ namespace Unleash.Tests.Internal
         public void Loads_From_Bootstrap_Provider_When_Backup_File_Is_Missing()
         {
             // Arrange
-            string toggleFileName = AppDataFile("unleash-repo-v1-missing.json");
+            string toggleFileName = AppDataFile("_ganpa-repo-v1-missing.json");
             string etagFileName = AppDataFile("etag-missing.txt");
             var serializer = new JsonNetSerializer();
             var fileSystem = new FileSystem(Encoding.UTF8);
@@ -68,7 +68,7 @@ namespace Unleash.Tests.Internal
         public void Loads_From_Bootstrap_Provider_When_Backup_File_Is_Missing_And_Returns_Null_When_Bootstrap_File_Returns_Null()
         {
             // Arrange
-            string toggleFileName = AppDataFile("unleash-repo-v1-missing.json");
+            string toggleFileName = AppDataFile("_ganpa-repo-v1-missing.json");
             string etagFileName = AppDataFile("etag-missing.txt");
             var serializer = new JsonNetSerializer();
             var fileSystem = new FileSystem(Encoding.UTF8);
@@ -93,7 +93,7 @@ namespace Unleash.Tests.Internal
         public void Default_Override_Calls_Bootstrap_Handler_When_Backup_File_Exists()
         {
             // Arrange
-            string toggleFileName = AppDataFile("unleash-repo-v1.json");
+            string toggleFileName = AppDataFile("_ganpa-repo-v1.json");
             string etagFileName = AppDataFile("etag-missing.txt");
             var serializer = new JsonNetSerializer();
             var fileSystem = new FileSystem(Encoding.UTF8);
@@ -118,7 +118,7 @@ namespace Unleash.Tests.Internal
         public void Does_Not_Call_Bootstrap_Handler_When_Backup_File_Exists_And_Override_Is_False()
         {
             // Arrange
-            string toggleFileName = AppDataFile("unleash-repo-v1.json");
+            string toggleFileName = AppDataFile("_ganpa-repo-v1.json");
             string etagFileName = AppDataFile("etag-missing.txt");
             var serializer = new JsonNetSerializer();
             var fileSystem = new FileSystem(Encoding.UTF8);
@@ -141,11 +141,11 @@ namespace Unleash.Tests.Internal
         public void Default_Override_Null_Should_Not_Null_Out_Backup_Toggles()
         {
             // Arrange
-            string toggleFileName = AppDataFile("unleash-repo-v1.json");
+            string toggleFileName = AppDataFile("_ganpa-repo-v1.json");
             string etagFileName = AppDataFile("etag-12345.txt");
             var serializer = new JsonNetSerializer();
             var fileSystem = new FileSystem(Encoding.UTF8);
-            var settings = new UnleashSettings();
+            var settings = new GanpaSettings();
             var fileLoader = new CachedFilesLoader(serializer, fileSystem, null, null, toggleFileName, etagFileName);
 
             // Act
@@ -160,11 +160,11 @@ namespace Unleash.Tests.Internal
         public void Default_Override_Should_Not_Null_Out_Backup_Toggles_When_Bootstrap_Result_Is_Null()
         {
             // Arrange
-            string toggleFileName = AppDataFile("unleash-repo-v1.json");
+            string toggleFileName = AppDataFile("_ganpa-repo-v1.json");
             string etagFileName = AppDataFile("etag-12345.txt");
             var serializer = new JsonNetSerializer();
             var fileSystem = new FileSystem(Encoding.UTF8);
-            var settings = new UnleashSettings();
+            var settings = new GanpaSettings();
             var bootstrapProviderFake = A.Fake<IToggleBootstrapProvider>();
             A.CallTo(() => bootstrapProviderFake.Read())
                 .Returns(null);
@@ -182,11 +182,11 @@ namespace Unleash.Tests.Internal
         public void Default_Override_Should_Not_Override_Backup_Toggles_When_Bootstrap_Result_Is_Empty_Collection()
         {
             // Arrange
-            string toggleFileName = AppDataFile("unleash-repo-v1.json");
+            string toggleFileName = AppDataFile("_ganpa-repo-v1.json");
             string etagFileName = AppDataFile("etag-12345.txt");
             var serializer = new JsonNetSerializer();
             var fileSystem = new FileSystem(Encoding.UTF8);
-            var settings = new UnleashSettings();
+            var settings = new GanpaSettings();
             var bootstrapProviderFake = A.Fake<IToggleBootstrapProvider>();
             A.CallTo(() => bootstrapProviderFake.Read())
                 .Returns(new ToggleCollection());
@@ -208,7 +208,7 @@ namespace Unleash.Tests.Internal
             string etagFileName = AppDataFile("etag-12345.txt");
             var serializer = new JsonNetSerializer();
             var fileSystem = new FileSystem(Encoding.UTF8);
-            var settings = new UnleashSettings();
+            var settings = new GanpaSettings();
             var bootstrapToggles = GetTestToggles();
             var bootstrapProviderFake = A.Fake<IToggleBootstrapProvider>();
             A.CallTo(() => bootstrapProviderFake.Read())
