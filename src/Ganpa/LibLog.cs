@@ -49,9 +49,9 @@ using System.Diagnostics.CodeAnalysis;
 // If you copied this file manually, you need to change all "YourRootNameSpace" so not to clash with other libraries
 // that use LibLog
 #if LIBLOG_PROVIDERS_ONLY
-namespace Unleash.LibLog
+namespace Ganpa.LibLog
 #else
-namespace Unleash.Logging
+namespace Ganpa.Logging
 #endif
 {
     using System.Collections.Generic;
