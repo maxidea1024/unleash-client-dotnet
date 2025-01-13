@@ -52,6 +52,7 @@ namespace Ganpa.Utilities
                     if (!response.IsSuccessStatusCode)
                     {
                         var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        // FIXME capture disposable resource issue.
                         Logger.Trace(() =>
                             $"GANPA: Error {response.StatusCode} from server in 'ToggleBootstrapUrlProvider.{nameof(FetchFile)}': " +
                             error);

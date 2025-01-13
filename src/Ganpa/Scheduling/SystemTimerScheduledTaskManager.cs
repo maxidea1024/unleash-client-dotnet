@@ -99,7 +99,11 @@ namespace Ganpa.Scheduling
                 foreach (var task in _timers)
                 {
                     // Returns false on second dispose
-                    if (!task.Value.Dispose(waitHandle)) continue;
+                    if (!task.Value.Dispose(waitHandle))
+                    {
+                        continue;
+                    }
+
                     if (!waitHandle.WaitOne(timeout))
                     {
                         throw new TimeoutException($"UNLEASH: Timeout waiting for task '{task.Key}' to stop..");

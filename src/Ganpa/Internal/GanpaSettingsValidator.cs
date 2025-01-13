@@ -4,6 +4,7 @@ namespace Ganpa.Internal
     {
         public static void Validate(GanpaSettings settings)
         {
+            // FIXME 원래 문자열이었나?
             if (string.IsNullOrEmpty(settings.GanpaApiUri))
             {
                 throw new GanpaException("You are required to specify an uri to an ganpa service");
